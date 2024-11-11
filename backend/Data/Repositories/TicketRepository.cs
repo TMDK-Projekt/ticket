@@ -1,44 +1,64 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Models;
+using Models.Interfaces;
 
 namespace Data.Repositories;
 
 public class TicketRepository : ITicketRepository
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<TicketRepository> _logger;
 
-    public TicketRepository(AppDbContext context)
+    public TicketRepository(AppDbContext context, ILogger<TicketRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task AddAsync(Ticket ticket)
     {
         // Hier müsste Code stehen der das ticket in die Datenbank hinzufügt
-        // z.B
+
         _context.Add(ticket);
         _context.SaveChanges();
         await Task.CompletedTask;
     }
 
-    public Task DeleteAsync(int id)
+    public async Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var ticket = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        // Alle Related Tickets müssen auch noch gelöscht werden (Methode schreiben mit GetAllRelatedTickets)
+
+        if (ticket == null)
+        {
+            _logger.LogError($"No Ticket with id: {id} Found");
+            return;
+        }
+
+        _context.Tickets.Remove(ticket);
+        _context.SaveChanges();
     }
 
-    public Task<IEnumerable<Ticket>> GetAllAsync()
+    public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        // Alle Individuellen Tickets die kein Ticket Relationship besitzen
+
+        var tickets = await _context.Tickets.ToListAsync();
+        return tickets;
     }
 
-    public async Task<Ticket> GetByIdAsync(int id)
+    public async Task<Ticket?> GetByIdAsync(int id)
     {
         var ticket = await _context.Tickets
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (ticket is null)
         {
-            throw new ArgumentException($"No Ticket with id: {id} Found");
+            _logger.LogError($"No Ticket with id: {id} Found");
+            return null;
         }
 
         return ticket;

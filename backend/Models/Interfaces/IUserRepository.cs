@@ -1,6 +1,4 @@
-﻿using Models;
-
-namespace Data.Repositories;
+﻿namespace Models.Interfaces;
 
 public interface IUserRepository
 {

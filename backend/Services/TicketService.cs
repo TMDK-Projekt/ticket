@@ -1,5 +1,5 @@
-﻿using Data.Repositories;
-using Models;
+﻿using Models;
+using Models.Interfaces;
 
 namespace Services;
 public class TicketService
@@ -23,7 +23,7 @@ public class TicketService
         await _ticketRepository.AddAsync(ticket);
     }
 
-    public async Task<Ticket> GetTicketByIdAsync(int id)
+    public async Task<Ticket?> GetTicketByIdAsync(int id)
     {
         return await _ticketRepository.GetByIdAsync(id);
     }

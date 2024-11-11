@@ -1,6 +1,7 @@
 using Data;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Models.Interfaces;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<TicketService>();
+
 
 builder.Services.AddControllers();
 

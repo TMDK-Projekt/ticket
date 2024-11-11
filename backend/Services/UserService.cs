@@ -1,4 +1,4 @@
-﻿using Data.Repositories;
+﻿using Models.Interfaces;
 using Models;
 
 namespace Services;
