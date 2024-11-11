@@ -20,6 +20,6 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<TicketRelationship>()
-            .HasKey(tr => new { tr.InitialTicketId, tr.RelatedTicketId });
+            .HasKey(tr => new { tr.TicketId, tr.RelatedTicketId });
     }
 }

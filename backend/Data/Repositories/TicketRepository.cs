@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace Data.Repositories;
 
@@ -32,15 +33,14 @@ public class TicketRepository : ITicketRepository
 
     public async Task<Ticket> GetByIdAsync(int id)
     {
-         var ticket = _context.Tickets.Where(x => x.Id == id)
-            .FirstOrDefault();
+        var ticket = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (ticket is null)
         {
             throw new ArgumentException($"No Ticket with id: {id} Found");
         }
 
-        await Task.CompletedTask;
         return ticket;
     }
 
