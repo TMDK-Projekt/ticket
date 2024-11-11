@@ -25,7 +25,7 @@ public class TicketRepository : ITicketRepository
         await Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         var ticket = await _context.Tickets
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -50,7 +50,7 @@ public class TicketRepository : ITicketRepository
         return tickets;
     }
 
-    public async Task<Ticket?> GetByIdAsync(int id)
+    public async Task<Ticket?> GetByIdAsync(Guid id)
     {
         var ticket = await _context.Tickets
             .FirstOrDefaultAsync(x => x.Id == id);

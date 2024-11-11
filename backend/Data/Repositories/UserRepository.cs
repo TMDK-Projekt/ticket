@@ -10,7 +10,7 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(string id)
+    public Task DeleteAsync(Guid id)
     {
         throw new NotImplementedException();
     }
@@ -20,7 +20,7 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<User> GetByIdAsync(string id)
+    public Task<User> GetByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }

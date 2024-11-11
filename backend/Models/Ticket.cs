@@ -4,14 +4,14 @@ namespace Models;
 public class Ticket
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
 
     [Required]
-    public int EmployeeId {  get; set; }
-    public List<TicketRelationship> RelatedTickets { get; set; } = [];
+    public Guid EmployeeId {  get; set; }
+    public Guid RelatedTicketId { get; set; }
     public DateTime? CreatedDate { get; set; }
 
     [Required]

@@ -3,6 +3,7 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,38 +11,40 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241111223132_NoRelatedTicketsMigration")]
+    partial class NoRelatedTicketsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Models.Ticket", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RelatedTicketId")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("RelatedTicketsId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Response")
                         .IsRequired()
@@ -52,14 +55,16 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RelatedTicketsId");
+
                     b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -91,6 +96,15 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Models.Ticket", b =>
+                {
+                    b.HasOne("Models.Ticket", "RelatedTickets")
+                        .WithMany()
+                        .HasForeignKey("RelatedTicketsId");
+
+                    b.Navigation("RelatedTickets");
                 });
 #pragma warning restore 612, 618
         }

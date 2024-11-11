@@ -13,8 +13,8 @@ public class TicketService
     {
         var ticket = new Ticket
         {
-            Id = 1,
-            CustomerId = customerId,
+            Id = new Guid(),
+            CustomerId = new Guid(),
             Reason = reason,
             Status = Status.None,
             CreatedDate = DateTime.Now
@@ -23,7 +23,7 @@ public class TicketService
         await _ticketRepository.AddAsync(ticket);
     }
 
-    public async Task<Ticket?> GetTicketByIdAsync(int id)
+    public async Task<Ticket?> GetTicketByIdAsync(Guid id)
     {
         return await _ticketRepository.GetByIdAsync(id);
     }
@@ -33,7 +33,7 @@ public class TicketService
         await _ticketRepository.UpdateAsync(ticket);
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         await _ticketRepository.DeleteAsync(id);
     }
