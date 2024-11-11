@@ -1,1 +1,10 @@
-.idea
+# IDE and editor config files
+.idea/
+.vs/
+
+# Build and temporary files
+bin/
+obj/
+*.db
+*.tmp
+*.temp
