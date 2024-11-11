@@ -23,9 +23,24 @@ public class TicketService
         await _ticketRepository.AddAsync(ticket);
     }
 
-    public async Task<Ticket> GetTicketByIdAsync(string id)
+    public async Task<Ticket> GetTicketByIdAsync(int id)
     {
         return await _ticketRepository.GetByIdAsync(id);
+    }
+
+    public async Task UpdateAsync(Ticket ticket)
+    {
+        await _ticketRepository.UpdateAsync(ticket);
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        await _ticketRepository.DeleteAsync(id);
+    }
+
+    public async Task<IEnumerable<Ticket>> GetAllAsync()
+    {
+        return await _ticketRepository.GetAllAsync();
     }
 }
 

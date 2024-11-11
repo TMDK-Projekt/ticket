@@ -3,6 +3,7 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241111103607_TicketlessMigration")]
+    partial class TicketlessMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -54,7 +57,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.TicketRelationship", b =>
                 {
-                    b.Property<int>("InitialTicketId")
+                    b.Property<int>("TicketId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("RelatedTicketId")
@@ -63,12 +66,9 @@ namespace Data.Migrations
                     b.Property<string>("RelationshipDescription")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TicketId")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("TicketId", "RelatedTicketId");
 
-                    b.HasKey("InitialTicketId", "RelatedTicketId");
-
-                    b.HasIndex("TicketId");
+                    b.HasIndex("RelatedTicketId");
 
                     b.ToTable("TicketRelationships");
                 });
@@ -113,9 +113,19 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.TicketRelationship", b =>
                 {
+                    b.HasOne("Models.Ticket", "RelatedTicket")
+                        .WithMany()
+                        .HasForeignKey("RelatedTicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.Ticket", null)
                         .WithMany("RelatedTickets")
-                        .HasForeignKey("TicketId");
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RelatedTicket");
                 });
 
             modelBuilder.Entity("Models.Ticket", b =>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 
-namespace API.Controllers;
+namespace API.Controller;
 
 [Route("api/ticket")]
 [ApiController]
@@ -20,7 +20,7 @@ public class TicketController : ControllerBase
     }
 
     [HttpGet("getTicket/{id}")]
-    public async Task<IActionResult> Get(string id)
+    public async Task<IActionResult> Get(int id)
     {
         var ticket = await _ticketService.GetTicketByIdAsync(id);
         return Ok(ticket);

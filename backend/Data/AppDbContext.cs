@@ -20,17 +20,6 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<TicketRelationship>()
-            .HasKey(tr => new { tr.TicketId, tr.RelatedTicketId });
-
-        modelBuilder.Entity<TicketRelationship>()
-            .HasOne(tr => tr.Ticket)
-            .WithMany(t => t.RelatedTickets)
-            .HasForeignKey(tr => tr.TicketId);
-
-        modelBuilder.Entity<TicketRelationship>()
-            .HasOne(tr => tr.RelatedTicket)
-            .WithMany()
-            .HasForeignKey(tr => tr.RelatedTicketId);
+            .HasKey(tr => new { tr.InitialTicketId, tr.RelatedTicketId });
     }
-
 }

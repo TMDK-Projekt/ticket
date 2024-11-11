@@ -6,6 +6,11 @@ public class TicketRepository : ITicketRepository
 {
     private readonly AppDbContext _context;
 
+    public TicketRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
     public async Task AddAsync(Ticket ticket)
     {
         // Hier müsste Code stehen der das ticket in die Datenbank hinzufügt
@@ -15,7 +20,7 @@ public class TicketRepository : ITicketRepository
         await Task.CompletedTask;
     }
 
-    public Task DeleteAsync(string id)
+    public Task DeleteAsync(int id)
     {
         throw new NotImplementedException();
     }
@@ -25,25 +30,16 @@ public class TicketRepository : ITicketRepository
         throw new NotImplementedException();
     }
 
-    public async Task<Ticket> GetByIdAsync(string id)
+    public async Task<Ticket> GetByIdAsync(int id)
     {
-        // Created Random ticket as a Mock
-        var ticket = new Ticket()
+         var ticket = _context.Tickets.Where(x => x.Id == id)
+            .FirstOrDefault();
+
+        if (ticket is null)
         {
-            Id = 1,
-            CustomerId = 1,
-            EmployeeId = 12,
-            CreatedDate = DateTime.Now,
-            Description = "Mock",
-            Reason = "Reason",
-            RelatedTickets = [
-                new TicketRelationship(){
-                   RelatedTicketId = 2,
-                   RelationshipDescription = "Test Relationsship",
-               }
-                ],
-            Status = Status.None,
-        };
+            throw new ArgumentException($"No Ticket with id: {id} Found");
+        }
+
         await Task.CompletedTask;
         return ticket;
     }
