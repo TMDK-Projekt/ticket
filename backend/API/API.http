@@ -1,7 +1,13 @@
 @API_HostAddress = https://localhost:7257
 
-GET {{API_HostAddress}}/api/ticket/getTicket/5b8b8f18-86a7-4294-aa94-22ad541d6f0a
+# GET {{API_HostAddress}}/api/ticket/getTicket/5b8b8f18-86a7-4294-aa94-22ad541d6f0a
+POST {{API_HostAddress}}/api/ticket/createTicket
+Content-Type: application/json
 Accept: application/json
+{
+  "reason": "Test Reason",
+  "customerid": "8a49e30e-d753-44cc-b3eb-9634cb4bf98c"
+}
 
 ###
   

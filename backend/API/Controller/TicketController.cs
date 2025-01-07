@@ -10,13 +10,8 @@ public class TicketController : ControllerBase
     private readonly TicketService _ticketService;
 
     public TicketController(TicketService ticketService)
-        => _ticketService = ticketService;
-
-    // GET: api/<TicketController>
-    [HttpGet]
-    public IEnumerable<string> Get()
     {
-        return new string[] { "value1", "value2" };
+        _ticketService = ticketService;
     }
 
     [HttpGet("getTicket/{id}")]
@@ -26,6 +21,18 @@ public class TicketController : ControllerBase
         return Ok(ticket);
     }
 
+    [HttpPost("createTicket")]
+    public async Task<IActionResult> CreateTicket([FromBody] CreateTicketRequest request)
+    {
+        await _ticketService.CreateTicketAsync(request.CustomerId, request.Reason);
+        return Ok();
+    }
+
+    public class CreateTicketRequest
+    {
+        public Guid CustomerId { get; set; }
+        public string Reason { get; set; } = string.Empty;
+    }
 
     // POST api/<TicketController>
     [HttpPost]

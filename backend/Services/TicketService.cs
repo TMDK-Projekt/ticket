@@ -9,12 +9,12 @@ public class TicketService
     public TicketService(ITicketRepository ticketRepository) =>
         _ticketRepository = ticketRepository;
 
-    public async Task CreateTicketAsync(int customerId, string reason)
+    public async Task CreateTicketAsync(Guid customerId, string reason)
     {
         var ticket = new Ticket
         {
             Id = new Guid(),
-            CustomerId = new Guid(),
+            CustomerId = customerId,
             Reason = reason,
             Status = Status.None,
             CreatedDate = DateTime.Now
