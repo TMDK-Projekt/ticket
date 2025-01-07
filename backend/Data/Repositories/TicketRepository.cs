@@ -18,10 +18,9 @@ public class TicketRepository : ITicketRepository
 
     public async Task AddAsync(Ticket ticket)
     {
-        // Hier müsste Code stehen der das ticket in die Datenbank hinzufügt
-
         _context.Add(ticket);
         _context.SaveChanges();
+        _logger.LogInformation($"Ticket with ID: {ticket.Id} Successfully Created");
         await Task.CompletedTask;
     }
 
