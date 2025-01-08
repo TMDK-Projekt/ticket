@@ -1,8 +1,8 @@
 ﻿namespace Models;
 public enum Status
 {
-    None,
+    Unassigned,
+    Assigned,
     OnHold,
-    Active,
     Closed
 }

@@ -16,7 +16,7 @@ public class TicketService
             Id = new Guid(),
             CustomerId = customerId,
             Reason = reason,
-            Status = Status.None,
+            Status = Status.Unassigned,
             CreatedDate = DateTime.Now
         };
 
