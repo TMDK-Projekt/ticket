@@ -114,9 +114,6 @@ public class TicketRepository : ITicketRepository
         await Task.CompletedTask;
     }
 
-    public Task UpdateAsync(Ticket ticket)
-    {
-        throw new NotImplementedException();
     public async Task UpdateAsync(Ticket ticket)
     {
         //Wenn Ticket Related Id hat dann darf es nicht geupdated werden

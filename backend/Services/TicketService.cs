@@ -63,13 +63,12 @@ public class TicketService
         return await _ticketRepository.GetAllAsync();
     }
 
-    public async Task AssignAsync(TicketDto dto)
+
     public async Task<IEnumerable<Ticket>> GetTicketTree(Guid ticketId, Guid customerId)
     {
         return await _ticketRepository.GetTicketTree(ticketId,customerId);
     }
-
-    public async Task AssignAsync(Guid ticketId, Guid userId)
+    public async Task AssignAsync(TicketDto dto)
     {
         await _ticketRepository.AssignAsync(dto.Id,dto.EmployeeId);
     }
