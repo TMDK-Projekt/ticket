@@ -1,13 +1,19 @@
 ﻿using Data;
+using Data.Repositories;
+using Microsoft.Extensions.Logging;
 namespace Models.Interfaces;
 
 public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<UserRepository> _logger;
 
-    public Task AddAsync(User user)
+    public async Task AddAsync(User user)
     {
-        throw new NotImplementedException();
+        _context.Add( user );
+        _context.SaveChanges();
+        _logger.LogInformation( $"Ticket with ID: {user.Id} Successfully Created" );
+        await Task.CompletedTask;
     }
 
     public Task DeleteAsync(Guid id)

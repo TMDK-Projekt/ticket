@@ -13,6 +13,7 @@ public class UserService
     public async Task CreateUser()
     {
         var user = new User();
+
         await _userRepository.AddAsync(user);
     }
 }
