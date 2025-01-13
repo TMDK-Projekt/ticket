@@ -5,6 +5,5 @@
 # Build and temporary files
 bin/
 obj/
-*.db
 *.tmp
 *.temp
