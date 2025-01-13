@@ -26,6 +26,10 @@ public class UserService
         await _userRepository.AddAsync(user);
     }
 
+    public async Task<User?> GetUserAsync( string email, string password )
+    {
+        return await _userRepository.GetUserAsync(email, password.Encrypt());
+    }
     public async Task DeleteUserById(Guid userId)
     {
         await _userRepository.DeleteAsync(userId);

@@ -1,6 +1,8 @@
 ﻿using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using System;
 namespace Models.Interfaces;
 
 public class UserRepository : IUserRepository
@@ -23,19 +25,18 @@ public class UserRepository : IUserRepository
         await Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task<User?> GetUserAsync( string email, string password )
     {
-        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+        var users = _context.Users
+            .FirstOrDefault(x => x.Email == email && x.Password == password);
 
-        if (user == null)
+        if ( users is null )
         {
-            _logger.LogError($"User with ID: {id} Not Found");
-            return;
+            _logger.LogError( $"No user with email: {email} and password {password} found" );
+            return null;
         }
 
-        _context.Remove(user);
-        _logger.LogInformation($"User with ID: {id} Successfully Deleted");
-        await _context.SaveChangesAsync();
+        return users ;
     }
 
     public async Task<User?> GetByIdAsync(Guid id)
@@ -47,8 +48,22 @@ public class UserRepository : IUserRepository
             _logger.LogError($"User with ID: {id} not found.");
             return null;
         }
-
         return user;
+    }
+
+    public async Task DeleteAsync( Guid id )
+    {
+        var user = _context.Users.Where( user => user.Id == id );
+
+        if ( user == null )
+        {
+            _logger.LogError( $"User with ID: {id} Not Found" );
+            return;
+        }
+
+        _context.Remove( user );
+        _logger.LogInformation( $"User with ID: {id} Successfully Deleted" );
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(User user)
