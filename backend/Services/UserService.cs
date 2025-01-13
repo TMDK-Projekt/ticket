@@ -51,4 +51,9 @@ public class UserService
             Email = dto.Email ?? string.Empty,
         });
     }
+
+    public async Task<(string FirstName, string LastName)?> GetUserNameById(Guid id)
+    {
+        return await _userRepository.GetUserNameByIdAsync(id);
+    }
 }

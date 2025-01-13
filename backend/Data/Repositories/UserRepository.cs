@@ -87,4 +87,18 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<(string FirstName, string LastName)?> GetUserNameByIdAsync(Guid id)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+        {
+            _logger.LogWarning($"User with ID {id} not found.");
+            return null;
+        }
+
+        return (user.FirstName, user.LastName);
+    }
+
 }

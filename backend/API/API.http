@@ -1,6 +1,6 @@
 @API_HostAddress = https://localhost:7257
 
-GET {{API_HostAddress}}/api/user/deleteUser/601FF830-31A7-478C-985B-84E811937F2D
+GET {{API_HostAddress}}/api/user/getUserName/4C1E465C-38E3-4C22-9C93-658C7F2ACB78
 # GET {{API_HostAddress}}/api/ticket/getTicket/5D244CC3-6226-4323-A9EF-50012E4A014C
 # POST {{API_HostAddress}}/api/ticket/createTicket
 # Content-Type: application/json
@@ -9,6 +9,14 @@ GET {{API_HostAddress}}/api/user/deleteUser/601FF830-31A7-478C-985B-84E811937F2D
 #   "reason": "Test Reason",
 #   "customerid": "8a49e30e-d753-44cc-b3eb-9634cb4bf98c"
 # }
+# POST {{API_HostAddress}}/api/user/updateUser
+# Content-Type: application/json
+# Accept: application/json
+# {
+#   "id": "987CA60F-5B1B-4DE0-9AD4-44FF2DF3A1D0",
+#   "email": "supertest@test.de"
+# }
+###
 # POST {{API_HostAddress}}/api/user/createUser
 # Content-Type: application/json
 # Accept: application/json
@@ -18,15 +26,4 @@ GET {{API_HostAddress}}/api/user/deleteUser/601FF830-31A7-478C-985B-84E811937F2D
 #   "email": "test@test.de", 
 #   "password": "test2"
 # }
-# POST {{API_HostAddress}}/api/user/updateUser
-# Content-Type: application/json
-# Accept: application/json
-# {
-#   "id": "601FF830-31A7-478C-985B-84E811937F2D",
-#   "firstName": "UpdateTestBestanden", 
-#   "lastName": "Name2", 
-#   "email": "test@test.de", 
-#   "password": "test2"
-# }
-###
   

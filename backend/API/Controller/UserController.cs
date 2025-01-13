@@ -49,5 +49,14 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-
+    [HttpGet("getUserName/{id}")]
+    public async Task<IActionResult> GetUserName(Guid id)
+    {
+        var result = await _userService.GetUserNameById(id);
+        return Ok(new
+        {
+            result.Value.FirstName,
+            result.Value.LastName
+        });
+    }
 }
