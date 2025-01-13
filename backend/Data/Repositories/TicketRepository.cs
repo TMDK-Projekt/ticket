@@ -105,6 +105,18 @@ public class TicketRepository : ITicketRepository
         return ticket;
     }
 
+    public async Task UpdateRelatedTicketIdAsync( Guid initialTicketId, Guid attachedTicketId )
+    {
+        var initialTicket = await _context.Tickets.FirstOrDefaultAsync(x => x.Id == initialTicketId);
+        initialTicket.RelatedTicketId = attachedTicketId;
+        _context.SaveChanges();
+        _logger.LogInformation( $"Ticket with ID: {attachedTicketId} was referenced in ticket with ID: {initialTicketId}" );
+        await Task.CompletedTask;
+    }
+
+    public Task UpdateAsync(Ticket ticket)
+    {
+        throw new NotImplementedException();
     public async Task UpdateAsync(Ticket ticket)
     {
         //Wenn Ticket Related Id hat dann darf es nicht geupdated werden
@@ -147,6 +159,7 @@ public class TicketRepository : ITicketRepository
         }
 
         result.EmployeeId = userId;
+        result.Status = Status.Assigned;
         _context.SaveChanges();
         _logger.LogInformation($"Ticket with ID: {ticketId} assigned to user with ID: {userId}");
         await Task.CompletedTask;

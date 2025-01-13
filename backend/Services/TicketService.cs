@@ -18,10 +18,29 @@ public class TicketService
             CustomerId = dto.CustomerId,
             Reason = dto.Reason,
             Status = Status.Unassigned,
+            Description = dto.Description,
             CreatedDate = DateTime.Now
         };
 
         await _ticketRepository.AddAsync(ticket);
+    }
+
+    public async Task CreateAttachedTicketAsync(TicketDto dto )
+    {
+        var ticket = new Ticket
+        {
+            Id = new Guid(),
+            CustomerId = dto.CustomerId,
+            EmployeeId = dto.EmployeeId,
+            Reason = dto.Reason,
+            Status = Status.Assigned,
+            Description = dto.Description,
+            CreatedDate = DateTime.Now
+        };
+
+        await _ticketRepository.AddAsync(ticket);
+
+        await _ticketRepository.UpdateRelatedTicketIdAsync(dto.Id, ticket.Id);
     }
 
     public async Task<Ticket?> GetTicketByIdAsync(Guid id)
@@ -44,6 +63,7 @@ public class TicketService
         return await _ticketRepository.GetAllAsync();
     }
 
+    public async Task AssignAsync(TicketDto dto)
     public async Task<IEnumerable<Ticket>> GetTicketTree(Guid ticketId, Guid customerId)
     {
         return await _ticketRepository.GetTicketTree(ticketId,customerId);
@@ -51,7 +71,7 @@ public class TicketService
 
     public async Task AssignAsync(Guid ticketId, Guid userId)
     {
-        await _ticketRepository.AssignAsync(ticketId,userId);
+        await _ticketRepository.AssignAsync(dto.Id,dto.EmployeeId);
     }
 }
 

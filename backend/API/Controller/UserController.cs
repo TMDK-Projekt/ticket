@@ -23,10 +23,10 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("logInUser")]
-    public async Task<IActionResult> LogInUser([FromBody] UserDto dto)
+    public async Task<Guid> LogInUser([FromBody] UserDto dto)
     {
         var result = await _userService.GetUserAsync(dto.Email, dto.Password);
-        return Ok(result);
+        return result.Id;
     }
 
     [HttpPost("updateUser")]
