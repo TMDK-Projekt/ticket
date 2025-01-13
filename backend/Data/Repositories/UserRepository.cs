@@ -25,23 +25,24 @@ public class UserRepository : IUserRepository
         await Task.CompletedTask;
     }
 
-    public async Task<User?> GetUserAsync( string email, string password )
+    public async Task<User?> GetUserAsync(string email, string password)
     {
-        var users = _context.Users
-            .FirstOrDefault(x => x.Email == email && x.Password == password);
+        var user = await _context.Users
+            .FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
 
-        if ( users is null )
+        if (user is null)
         {
-            _logger.LogError( $"No user with email: {email} and password {password} found" );
+            _logger.LogError($"No user with email: {email} and password {password} found");
             return null;
         }
 
-        return users ;
+        return user;
     }
 
     public async Task<User?> GetByIdAsync(Guid id)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
 
         if (user == null)
         {
@@ -51,18 +52,19 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task DeleteAsync( Guid id )
+    public async Task DeleteAsync(Guid id)
     {
-        var user = _context.Users.Where( user => user.Id == id );
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
 
-        if ( user == null )
+        if (user == null)
         {
-            _logger.LogError( $"User with ID: {id} Not Found" );
+            _logger.LogError($"User with ID: {id} Not Found");
             return;
         }
 
-        _context.Remove( user );
-        _logger.LogInformation( $"User with ID: {id} Successfully Deleted" );
+        _context.Remove(user);
+        _logger.LogInformation($"User with ID: {id} Successfully Deleted");
         await _context.SaveChangesAsync();
     }
 
