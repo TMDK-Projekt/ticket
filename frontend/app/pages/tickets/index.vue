@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const tickets = ref([
+const tickets = [
   {
     "id": "f1e1f7a8-19e7-40cb-b72f-c79c5a649c70",
     "customerId": "cf7d7cb8-d1af-4823-961f-7ab03466a2bc",
@@ -99,11 +99,11 @@ const tickets = ref([
     "description": "Customer wants to upgrade their subscription plan.",
     "response": "Upgrade processed successfully."
   },
-])
+]
 
-const filter = ref<number>()
+const filter = ref(null)
 const filtered = computed(() => {
-  return tickets.value
+  return tickets
       .sort((a, b) => {
         if (a.status !== b.status) {
           return a.status - b.status;
@@ -113,71 +113,31 @@ const filtered = computed(() => {
       .filter(t => !filter.value || t.status == filter.value);
 });
 
-
-const status = {
-  0: 'Nicht Zugewiesen',
-  1: 'Zugewiesen',
-  2: 'Warteliste',
-  3: 'Geschlossen',
-  9999: 'Alle'
-}
-
-function createTicket(){
-  tickets.value.push({
-    "id": "f1e1f7a8-19e7-40cb-b72f-c79c5a649c70",
-    "customerId": "cf7d7cb8-d1af-4823-961f-7ab03466a2bc",
-    "employeeId": "00000000-0000-0000-0000-000000000000",
-    "relatedTicketId": "00000000-0000-0000-0000-000000000000",
-    "createdDate": "2025-01-10T09:15:34.334787",
-    "reason": "Request for Refund",
-    "status": 1,
-    "description": "Customer requests a refund for a double charge.",
-    "response": "Refund processed."
-  },)
-}
 </script>
 
 <template>
-  <div class="flex gap-2 flex-col">
-    <div class="mt-5 flex grow justify-end gap-2">
-      <UiSelect v-model="filter">
-        <UiSelectTrigger>
-          <UiSelectValue placeholder="Filter Status" />
-        </UiSelectTrigger>
-        <UiSelectContent>
-          <UiSelectGroup>
-            <UiSelectItem
-                class="font-semibold"
-                :key="useId()"
-                :value="Object.keys(status)[index]"
-                v-for="(stat,index) in status">
-              {{stat}}
-            </UiSelectItem>
-          </UiSelectGroup>
-        </UiSelectContent>
-
-      </UiSelect>
+  <div>
+    <div class="mt-5 flex grow justify-end">
+      <input v-model="filter">
+      <UiButton>
+        Ticket erstellen
+      </UiButton>
     </div>
-    <div class="flex justify-end">
-       <span class="font-semibold text-sm">
-      {{filtered.length}} Tickets
-    </span>
-    </div>
-
   </div>
 
-  <div v-if="filtered.length != 0" class="mt-4">
+  <div v-if="tickets" class="mt-4">
     <div class="flex gap-4 flex-col w-full">
       <UiCard class="relative" v-for="ticket in filtered" :key="ticket.id">
         <UiCardHeader class="flex flex-row justify-between">
           <UiCardTitle class="text-lg">
             {{ticket.reason}}
           </UiCardTitle>
-          <div class="absolute top-4 right-4 font-semibold border rounded-md p-4  flex flex-col">
+          <div class="absolute top-4 right-4 font-semibold  flex flex-col">
             <span>
-           {{status[ticket.status]}}
+            Status: {{ticket.status}}
             </span>
             <span>
+
             Assigneed: {{ ticket.employeeId != "00000000-0000-0000-0000-000000000000" && ticket.employeeId }}
             </span>
           </div>
@@ -190,24 +150,15 @@ function createTicket(){
           </div>
 
         </UiCardContent>
-        <UiCardFooter class="flex justify-between">
+        <UiCardFooter>
           <span class="text-sm font-semibold text-muted-foreground">
           {{timeAgo(new Date(ticket.createdDate))}}
           </span>
-          <div class="flex gap-2">
-            <UiButton>
-              Zuweisen
-            </UiButton>
-            <UiButton>
-              Bearbeiten
-            </UiButton>
-          </div>
-
         </UiCardFooter>
       </UiCard>
     </div>
   </div>
   <div v-else class="grow grid place-content-center h-full text-lg font-semibold">
-    Keine Tickets
+        Meine Tickets
   </div>
 </template>
