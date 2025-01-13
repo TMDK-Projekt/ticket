@@ -1,6 +1,6 @@
 @API_HostAddress = https://localhost:7257
 
-GET {{API_HostAddress}}/api/user/getUserName/4C1E465C-38E3-4C22-9C93-658C7F2ACB78
+# GET {{API_HostAddress}}/api/user/getUserName/4C1E465C-38E3-4C22-9C93-658C7F2ACB78
 # GET {{API_HostAddress}}/api/ticket/getTicket/5D244CC3-6226-4323-A9EF-50012E4A014C
 # POST {{API_HostAddress}}/api/ticket/createTicket
 # Content-Type: application/json
@@ -16,14 +16,15 @@ GET {{API_HostAddress}}/api/user/getUserName/4C1E465C-38E3-4C22-9C93-658C7F2ACB7
 #   "id": "987CA60F-5B1B-4DE0-9AD4-44FF2DF3A1D0",
 #   "email": "supertest@test.de"
 # }
-###
-# POST {{API_HostAddress}}/api/user/createUser
-# Content-Type: application/json
-# Accept: application/json
-# {
-#   "firstName": "UpdateTest", 
-#   "lastName": "Name1", 
-#   "email": "test@test.de", 
-#   "password": "test2"
-# }
+#
+POST {{API_HostAddress}}/api/ticket/createAttachedTicket
+Content-Type: application/json
+Accept: application/json
+{
+  "Reason": "Test Reason",
+  "Id": "1E844326-1191-491A-B9CD-FA4EC4137E31",
+  "Customerid": "8a49e30e-d753-44cc-b3eb-9634cb4bf98c",
+  "EmployeeId": "4C1E465C-38E3-4C22-9C93-658C7F2ACB78",
+  "Description": "Random problem ........"
+}
   

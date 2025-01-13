@@ -32,14 +32,15 @@ public class TicketController : ControllerBase
     [HttpPost("assignTicket")]
     public async Task<IActionResult> AssignTicket( [FromBody] TicketDto dto)
     {
-        await _ticketService.AssignAsync(dto.Id, dto.EmployeeId);
+        await _ticketService.AssignAsync(dto);
         return Ok();
     }
 
-    // POST api/<TicketController>
-    [HttpPost]
-    public void Post([FromBody] string value)
+    [HttpPost("createAttachedTicket")]
+    public async Task<IActionResult> CreateAttachedTicket([FromBody] TicketDto dto)
     {
+        await _ticketService.CreateAttachedTicketAsync(dto);
+        return Ok();
     }
 
     // PUT api/<TicketController>/5
