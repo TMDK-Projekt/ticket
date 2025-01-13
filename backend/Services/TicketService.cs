@@ -48,5 +48,10 @@ public class TicketService
     {
         return await _ticketRepository.GetTicketTree(ticketId,customerId);
     }
+
+    public async Task AssignAsync(Guid ticketId, Guid userId)
+    {
+        await _ticketRepository.AssignAsync(ticketId,userId);
+    }
 }
 
