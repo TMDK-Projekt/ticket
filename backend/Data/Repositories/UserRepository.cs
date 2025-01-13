@@ -8,11 +8,18 @@ public class UserRepository : IUserRepository
     private readonly AppDbContext _context;
     private readonly ILogger<UserRepository> _logger;
 
+
+    public UserRepository(AppDbContext context, ILogger<UserRepository> logger)
+    {
+        _context = context;
+        _logger = logger;
+    }
+
     public async Task AddAsync(User user)
     {
-        _context.Add( user );
+        _context.Add(user);
         _context.SaveChanges();
-        _logger.LogInformation( $"Ticket with ID: {user.Id} Successfully Created" );
+        _logger.LogInformation( $"User with ID: {user.Id} Successfully Created" );
         await Task.CompletedTask;
     }
 

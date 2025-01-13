@@ -1,6 +1,6 @@
 @API_HostAddress = https://localhost:7257
 
-GET {{API_HostAddress}}/api/ticket/getTicket/5D244CC3-6226-4323-A9EF-50012E4A014C
+# GET {{API_HostAddress}}/api/ticket/getTicket/5D244CC3-6226-4323-A9EF-50012E4A014C
 # POST {{API_HostAddress}}/api/ticket/createTicket
 # Content-Type: application/json
 # Accept: application/json
@@ -8,6 +8,15 @@ GET {{API_HostAddress}}/api/ticket/getTicket/5D244CC3-6226-4323-A9EF-50012E4A014
 #   "reason": "Test Reason",
 #   "customerid": "8a49e30e-d753-44cc-b3eb-9634cb4bf98c"
 # }
+POST {{API_HostAddress}}/api/user/createUser
+Content-Type: application/json
+Accept: application/json
+{
+  "firstName": "Marco", 
+  "lastName": "Schmelzer", 
+  "email": "test@test.de", 
+  "password": "test"
+}
 
 ###
   

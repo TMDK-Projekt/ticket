@@ -1,5 +1,6 @@
 ﻿using Models;
 using Models.Interfaces;
+using Services.Dto;
 
 namespace Services;
 public class TicketService
@@ -9,13 +10,13 @@ public class TicketService
     public TicketService(ITicketRepository ticketRepository) =>
         _ticketRepository = ticketRepository;
 
-    public async Task CreateTicketAsync(Guid customerId, string reason)
+    public async Task CreateTicketAsync(CreateTicketDto dto)
     {
         var ticket = new Ticket
         {
             Id = new Guid(),
-            CustomerId = customerId,
-            Reason = reason,
+            CustomerId = dto.CustomerId,
+            Reason = dto.Reason,
             Status = Status.Unassigned,
             CreatedDate = DateTime.Now
         };

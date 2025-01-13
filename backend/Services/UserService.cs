@@ -1,6 +1,7 @@
 ﻿using Models.Interfaces;
 using Models;
 using Services.Shared;
+using Services.Dto;
 
 namespace Services;
 
@@ -11,16 +12,16 @@ public class UserService
     public UserService(IUserRepository userRepository) =>
         _userRepository = userRepository;
 
-    public async Task CreateUser(string firstName, string lastName, string email, string password)
+    public async Task CreateUser(CreateUserDto dto)
     {
         var user = new User()
         {
             Id = Guid.NewGuid(),
-            FirstName = firstName,
-            LastName = lastName,    
-            Email = email,
-            IsEmployee = false,
-            Password = password.Encrypt(),
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,    
+            Email = dto.Email,
+            IsEmployee = dto.IsEmployee,
+            Password = dto.Password.Encrypt(),
         };
         await _userRepository.AddAsync(user);
     }

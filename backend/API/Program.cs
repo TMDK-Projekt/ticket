@@ -13,7 +13,7 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<TicketService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddControllers();
 

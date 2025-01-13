@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
+using Services.Dto;
 
 namespace API.Controller;
 
@@ -22,17 +23,12 @@ public class TicketController : ControllerBase
     }
 
     [HttpPost("createTicket")]
-    public async Task<IActionResult> CreateTicket([FromBody] CreateTicketRequest request)
+    public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDto dto)
     {
-        await _ticketService.CreateTicketAsync(request.CustomerId, request.Reason);
+        await _ticketService.CreateTicketAsync(dto);
         return Ok();
     }
 
-    public class CreateTicketRequest
-    {
-        public Guid CustomerId { get; set; }
-        public string Reason { get; set; } = string.Empty;
-    }
 
     // POST api/<TicketController>
     [HttpPost]
