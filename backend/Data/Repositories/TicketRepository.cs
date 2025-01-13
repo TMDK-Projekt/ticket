@@ -41,10 +41,51 @@ public class TicketRepository : ITicketRepository
         _context.SaveChanges();
     }
 
+
+    public async Task<IEnumerable<Ticket>> GetTicketTree(Guid ticketId, Guid customerId)
+    {
+        var allUserTickets = await _context.Tickets
+            .Where(ticket => ticket.CustomerId == customerId)
+            .ToListAsync();
+
+        if (allUserTickets.Count < 0)
+        {
+            _logger.LogError($"No Ticket for user with Id {customerId} Found");
+            return [];
+        }
+
+        var ticketToSearchForRelations = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.Id == ticketId);
+
+        if(ticketToSearchForRelations is null)
+        {
+            _logger.LogError($"No Ticket with Id {ticketId} Found");
+            return [];
+        }
+
+        var relatedTicketTree = new List<Ticket>
+        {
+            ticketToSearchForRelations
+        };
+
+        relatedTicketTree.AddRange(TicketTreeCreator([], ticketToSearchForRelations, allUserTickets).OrderBy(x => x.CreatedDate));
+        return relatedTicketTree;
+    }
+
+    private List<Ticket> TicketTreeCreator(List<Ticket> ticketTree, Ticket currentTicket, List<Ticket> allUserTickets)
+    {
+        var RelatedTicket = allUserTickets.First(x => x.RelatedTicketId == currentTicket.Id);
+        if (RelatedTicket is null)
+        {
+            return ticketTree;
+        }
+        ticketTree.Add(RelatedTicket);
+        return TicketTreeCreator(ticketTree, currentTicket, allUserTickets);
+    }
+
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
         // Alle Individuellen Tickets die kein Ticket Relationship besitzen
-
         var tickets = await _context.Tickets.ToListAsync();
         return tickets;
     }
@@ -63,8 +104,29 @@ public class TicketRepository : ITicketRepository
         return ticket;
     }
 
-    public Task UpdateAsync(Ticket ticket)
+    public async Task UpdateAsync(Ticket ticket)
     {
-        throw new NotImplementedException();
+        //Wenn Ticket Related Id hat dann darf es nicht geupdated werden
+        //Wenn Ticket Employee Id hat dann darf es nicht geupdated werden
+
+        var ticketToUpdate = await _context.Tickets
+           .FirstOrDefaultAsync(x => x.Id == ticket.Id);
+
+        if (ticketToUpdate is null)
+        {
+            _logger.LogError($"No Ticket with id: {ticket.Id} Found");
+            return;
+        }
+
+        if (ticketToUpdate.RelatedTicketId != Guid.Empty || ticketToUpdate.EmployeeId != Guid.Empty)
+        {
+            _logger.LogError($"Cant Update Ticket because it either has " +
+                $"a Related ticket or is already assinged to an Employee");
+            return;
+        }
+
+        ticketToUpdate.Description = ticket.Description;
+        await Task.CompletedTask;
+
     }
 }

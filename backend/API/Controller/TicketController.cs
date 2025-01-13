@@ -22,29 +22,24 @@ public class TicketController : ControllerBase
         return Ok(ticket);
     }
 
+    [HttpGet("getAllTickets")]
+    public async Task<IActionResult> GetAllTickets()
+    {
+        var tickets = await _ticketService.GetAllAsync();
+        return Ok(tickets);
+    }
+
+    [HttpPost("getAllRelatedTickets")]
+    public async Task<IActionResult> GetAllRelatedTickets([FromBody] TicketDto dto)
+    {
+        var tickets = await _ticketService.GetTicketTree(dto.Id, dto.CustomerId);
+        return Ok(tickets);
+    }
+
     [HttpPost("createTicket")]
     public async Task<IActionResult> CreateTicket([FromBody] TicketDto dto)
     {
         await _ticketService.CreateTicketAsync(dto);
         return Ok();
-    }
-
-
-    // POST api/<TicketController>
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
-    }
-
-    // PUT api/<TicketController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
-
-    // DELETE api/<TicketController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
     }
 }

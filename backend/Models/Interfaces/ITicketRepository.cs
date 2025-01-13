@@ -7,4 +7,5 @@ public interface ITicketRepository
     Task UpdateAsync(Ticket ticket);
     Task DeleteAsync(Guid id);
     Task<IEnumerable<Ticket>> GetAllAsync();
+    Task<IEnumerable<Ticket>> GetTicketTree(Guid ticketid, Guid customeriD);
 }
