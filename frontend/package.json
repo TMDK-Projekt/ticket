@@ -22,5 +22,8 @@
     "tailwindcss-animate": "^1.0.7",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@formkit/auto-animate": "^0.8.2"
   }
 }
