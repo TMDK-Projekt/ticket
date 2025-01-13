@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Dto;
+using System.Runtime.CompilerServices;
 namespace API.Controllers;
 
 [Route("api/user")]
@@ -21,12 +22,11 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-
-    // GET: api/<UserController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    [HttpPost("logInUser")]
+    public async Task<IActionResult> LogInUser( [FromBody] UserDto dto)
     {
-        return new string[] { "value1", "value2" };
+        var result = await _userService.GetUserAsync(dto.Email, dto.Password);
+        return Ok(result);
     }
 
     // GET api/<UserController>/5
