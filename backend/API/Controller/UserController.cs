@@ -21,36 +21,26 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-
-    // GET: api/<UserController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    [HttpPost("updateUser")]
+    public async Task<IActionResult> UpdateUser([FromBody] UserDto dto)
     {
-        return new string[] { "value1", "value2" };
+        await _userService.UpdateUser(dto);
+        return Ok();
     }
 
-    // GET api/<UserController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    [HttpGet("deleteUser/{id}")]
+    public async Task<IActionResult> DeleteUser(Guid id)
     {
-        return "value";
+        await _userService.DeleteUserById(id);
+        return Ok();
     }
 
-    // POST api/<UserController>
-    [HttpPost]
-    public void Post([FromBody] string value)
+    [HttpGet("getUser/{id}")]
+    public async Task<IActionResult> GetUser(Guid id)
     {
+        await _userService.GetUserById(id);
+        return Ok();
     }
 
-    // PUT api/<UserController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
 
-    // DELETE api/<UserController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-    }
 }

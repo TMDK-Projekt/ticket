@@ -1,5 +1,4 @@
 ﻿using Data;
-using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace Models.Interfaces;
@@ -26,7 +25,7 @@ public class UserRepository : IUserRepository
 
     public async Task DeleteAsync(Guid id)
     {
-        var user = _context.Users.Where(user => user.Id == id);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
 
         if (user == null)
         {
@@ -52,8 +51,23 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public Task UpdateAsync(User user)
+    public async Task UpdateAsync(User user)
     {
-        throw new NotImplementedException();
+        var existingUser = await _context.Users.FindAsync(user.Id);
+        if (existingUser == null)
+        {
+            _logger.LogWarning($"User with ID {user.Id} not found. Update operation aborted.");
+            return;
+        }
+
+        existingUser.FirstName = !string.IsNullOrWhiteSpace(user.FirstName) ? user.FirstName : existingUser.FirstName;
+        existingUser.LastName = !string.IsNullOrWhiteSpace(user.LastName) ? user.LastName : existingUser.LastName;
+        existingUser.Email = !string.IsNullOrWhiteSpace(user.Email) ? user.Email : existingUser.Email;
+        existingUser.Password = !string.IsNullOrWhiteSpace(user.Password) ? user.Password : existingUser.Password;
+
+        _context.Users.Update(existingUser);
+        _logger.LogInformation($"User with ID {user.Id} was successfully updated.");
+        await _context.SaveChangesAsync();
     }
+
 }

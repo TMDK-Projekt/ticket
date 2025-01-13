@@ -1,5 +1,6 @@
 @API_HostAddress = https://localhost:7257
 
+GET {{API_HostAddress}}/api/user/deleteUser/601FF830-31A7-478C-985B-84E811937F2D
 # GET {{API_HostAddress}}/api/ticket/getTicket/5D244CC3-6226-4323-A9EF-50012E4A014C
 # POST {{API_HostAddress}}/api/ticket/createTicket
 # Content-Type: application/json
@@ -8,15 +9,24 @@
 #   "reason": "Test Reason",
 #   "customerid": "8a49e30e-d753-44cc-b3eb-9634cb4bf98c"
 # }
-POST {{API_HostAddress}}/api/user/createUser
-Content-Type: application/json
-Accept: application/json
-{
-  "firstName": "Test", 
-  "lastName": "Test", 
-  "email": "test@test.de", 
-  "password": "test"
-}
-
+# POST {{API_HostAddress}}/api/user/createUser
+# Content-Type: application/json
+# Accept: application/json
+# {
+#   "firstName": "UpdateTest", 
+#   "lastName": "Name1", 
+#   "email": "test@test.de", 
+#   "password": "test2"
+# }
+# POST {{API_HostAddress}}/api/user/updateUser
+# Content-Type: application/json
+# Accept: application/json
+# {
+#   "id": "601FF830-31A7-478C-985B-84E811937F2D",
+#   "firstName": "UpdateTestBestanden", 
+#   "lastName": "Name2", 
+#   "email": "test@test.de", 
+#   "password": "test2"
+# }
 ###
   

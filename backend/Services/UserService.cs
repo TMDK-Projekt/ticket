@@ -35,4 +35,16 @@ public class UserService
     {
         await _userRepository.GetByIdAsync(userId); 
     }
+
+    public async Task UpdateUser(UserDto dto)
+    {
+        await _userRepository.UpdateAsync(new User
+        {
+            Id = dto.Id,
+            FirstName = dto.FirstName ?? string.Empty,
+            LastName = dto.LastName ?? string.Empty,
+            Password = dto.Password != null ? dto.Password.Encrypt() : string.Empty,
+            Email = dto.Email ?? string.Empty,
+        });
+    }
 }
