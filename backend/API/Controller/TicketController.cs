@@ -29,6 +29,12 @@ public class TicketController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("assignTicket")]
+    public async Task<IActionResult> AssignTicket( [FromBody] TicketDto dto)
+    {
+        await _ticketService.AssignAsync(dto.Id, dto.EmployeeId);
+        return Ok();
+    }
 
     // POST api/<TicketController>
     [HttpPost]

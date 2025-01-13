@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Models;
 using Models.Interfaces;
+using Services.Dto;
 
 namespace Data.Repositories;
 
@@ -66,5 +67,26 @@ public class TicketRepository : ITicketRepository
     public Task UpdateAsync(Ticket ticket)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task AssignAsync( Guid ticketId, Guid userId )
+    {
+        var result = _context.Tickets.FirstOrDefault(x=> x.Id == ticketId); // the needed ticket
+        if (result is null)
+        {
+            _logger.LogError( $"No Ticket with id: {ticketId} Found" );
+            return;
+        }
+
+        if ( _context.Users.First(x => x.Id == userId) is null)
+        {
+            _logger.LogError( $"No User with id: {userId} Found" );
+            return;
+        }
+
+        result.EmployeeId = userId;
+        _context.SaveChanges();
+        _logger.LogInformation($"Ticket with ID: {ticketId} assigned to user with ID: {userId}");
+        await Task.CompletedTask;
     }
 }
