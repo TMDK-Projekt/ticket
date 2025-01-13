@@ -1,31 +1,25 @@
 <script setup lang="ts">
-function signIn() {
-  const data = $fetch("http://localhost:8484/user", {
-    method: "post",
-    body: values.value
-  })
-}
+import {signInSchema} from "#shared/validation";
 
-const values = ref({
-  email: null,
-  password: null
+const {handleSubmit, values} = useForm({
+  validationSchema: toTypedSchema(signInSchema)
 })
+
+const onSubmit = handleSubmit((values) => {console.log(values)})
 </script>
 
 <template>
-
-  <UiCard>
+  <div class="w-dvw h-dvh flex items-center place-content-center">
+  <UiCard class="w-full max-w-lg" @submit="onSubmit">
       <UiCardHeader class="text-center">
         <UiCardTitle>Login</UiCardTitle>
       </UiCardHeader>
 
     <UiCardContent>
+      {{values}}
+      <ValidatedInput name="email" label="Email" type="email" />
+      <ValidatedInput name="password" label="Passwort" type="password"/>
 
-      <UiLabel>E-Mail</UiLabel>
-      <UiInput v-model="values.email" type="email"/>
-
-      <UiLabel>Passwort</UiLabel>
-      <UiInput v-model="values.password" type="password"/>
     </UiCardContent>
 
     <UiCardFooter>
@@ -33,10 +27,11 @@ const values = ref({
         <UiButton as-child variant="secondary">
           <NuxtLink to="/auth/signUp"> Registrieren </NuxtLink>
         </UiButton>
-        <UiButton @click="signIn">Anmelden</UiButton>
+        <UiButton @click="onSubmit">Anmelden</UiButton>
       </div>
     </UiCardFooter>
   </UiCard>
+  </div>
 
 </template>
 
