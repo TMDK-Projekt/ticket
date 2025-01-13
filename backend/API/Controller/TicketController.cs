@@ -23,7 +23,7 @@ public class TicketController : ControllerBase
     }
 
     [HttpPost("createTicket")]
-    public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDto dto)
+    public async Task<IActionResult> CreateTicket([FromBody] TicketDto dto)
     {
         await _ticketService.CreateTicketAsync(dto);
         return Ok();

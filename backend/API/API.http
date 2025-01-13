@@ -12,8 +12,8 @@ POST {{API_HostAddress}}/api/user/createUser
 Content-Type: application/json
 Accept: application/json
 {
-  "firstName": "Marco", 
-  "lastName": "Schmelzer", 
+  "firstName": "Test", 
+  "lastName": "Test", 
   "email": "test@test.de", 
   "password": "test"
 }

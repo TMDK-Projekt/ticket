@@ -1,6 +1,6 @@
 ﻿namespace Services.Dto;
 
-public class CreateUserDto
+public class UserDto
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;

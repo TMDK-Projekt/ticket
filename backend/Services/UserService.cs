@@ -12,7 +12,7 @@ public class UserService
     public UserService(IUserRepository userRepository) =>
         _userRepository = userRepository;
 
-    public async Task CreateUser(CreateUserDto dto)
+    public async Task CreateUser(UserDto dto)
     {
         var user = new User()
         {
@@ -26,5 +26,13 @@ public class UserService
         await _userRepository.AddAsync(user);
     }
 
-
+    public async Task DeleteUserById(Guid userId)
+    {
+        await _userRepository.DeleteAsync(userId);
+    }
+    
+    public async Task GetUserById(Guid userId)
+    {
+        await _userRepository.GetByIdAsync(userId); 
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Data;
 using Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace Models.Interfaces;
 
@@ -19,23 +20,36 @@ public class UserRepository : IUserRepository
     {
         _context.Add(user);
         _context.SaveChanges();
-        _logger.LogInformation( $"User with ID: {user.Id} Successfully Created" );
+        _logger.LogInformation($"User with ID: {user.Id} Successfully Created");
         await Task.CompletedTask;
     }
 
-    public Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var user = _context.Users.Where(user => user.Id == id);
+
+        if (user == null)
+        {
+            _logger.LogError($"User with ID: {id} Not Found");
+            return;
+        }
+
+        _context.Remove(user);
+        _logger.LogInformation($"User with ID: {id} Successfully Deleted");
+        await _context.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<User>> GetAllAsync()
+    public async Task<User?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
-    }
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
-    public Task<User> GetByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
+        if (user == null)
+        {
+            _logger.LogError($"User with ID: {id} not found.");
+            return null;
+        }
+
+        return user;
     }
 
     public Task UpdateAsync(User user)

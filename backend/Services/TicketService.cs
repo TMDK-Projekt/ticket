@@ -10,7 +10,7 @@ public class TicketService
     public TicketService(ITicketRepository ticketRepository) =>
         _ticketRepository = ticketRepository;
 
-    public async Task CreateTicketAsync(CreateTicketDto dto)
+    public async Task CreateTicketAsync(TicketDto dto)
     {
         var ticket = new Ticket
         {
