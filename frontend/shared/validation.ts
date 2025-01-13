@@ -6,28 +6,33 @@ const MIN_USERNAME_LENGTH = 1
 const MAX_USERNAME_LENGTH = 64
 
 const messages = {
-    username: {
-        required: 'Username is required.',
-        min: `Name must be at least ${MIN_USERNAME_LENGTH} character long.`,
-        max: `Name must be at most ${MAX_USERNAME_LENGTH} characters long.`,
+    firstName: {
+        required: 'Vorname ist erforderlich.',
+        min: `Vorname muss mindestens ${MIN_USERNAME_LENGTH} Zeichen lang sein.`,
+        max: `Vorname muss mindestens ${MAX_USERNAME_LENGTH} Zeichen lang sein.`,
+    },
+    lastName: {
+        required: 'Nachname ist erforderlich.',
+        min: `Nachname muss mindestens ${MIN_USERNAME_LENGTH} Zeichen lang sein.`,
+        max: `Nachname muss mindestens ${MAX_USERNAME_LENGTH} Zeichen lang sein.`,
     },
     email: {
-        invalid: 'Please enter a valid email address.',
+        invalid: 'Bitte eine gültige E-Mail verwenden.',
     },
     password: {
-        required: 'Password is required.',
-        min: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
-        max: `Password must be at most ${MAX_PASSWORD_LENGTH} characters long.`,
-        mismatch: 'Passwords do not match.',
+        required: 'Password ist erforderlich.',
+        min: `Passwort muss mindestens ${MIN_PASSWORD_LENGTH} Zeichen lang sein.`,
+        max: `Passwort muss mindestens ${MAX_PASSWORD_LENGTH} Zeichen lang sein.`,
+        mismatch: 'Passwörter stimmen nicht überein.',
     },
 }
 export const signUpSchema = z.object({
     firstName: z.string()
-        .min(MIN_USERNAME_LENGTH, messages.username.min)
-        .max(MAX_USERNAME_LENGTH, messages.username.max),
+        .min(MIN_USERNAME_LENGTH, messages.firstName.min)
+        .max(MAX_USERNAME_LENGTH, messages.firstName.max),
     lastName: z.string()
-        .min(MIN_USERNAME_LENGTH, messages.username.min)
-        .max(MAX_USERNAME_LENGTH, messages.username.max),
+        .min(MIN_USERNAME_LENGTH, messages.lastName.min)
+        .max(MAX_USERNAME_LENGTH, messages.lastName.max),
     email: z.string()
         .email(messages.email.invalid),
     password: z.string()
