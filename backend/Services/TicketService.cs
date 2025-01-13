@@ -63,10 +63,9 @@ public class TicketService
         return await _ticketRepository.GetAllAsync();
     }
 
-
-    public async Task<IEnumerable<Ticket>> GetTicketTree(Guid ticketId, Guid customerId)
+    public async Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketId, Guid customerId)
     {
-        return await _ticketRepository.GetTicketTree(ticketId,customerId);
+        return await _ticketRepository.GetRelatedTicketTree(ticketId,customerId);
     }
     public async Task AssignAsync(TicketDto dto)
     {

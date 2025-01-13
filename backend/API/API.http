@@ -2,6 +2,7 @@
 
 # GET {{API_HostAddress}}/api/user/getUserName/4C1E465C-38E3-4C22-9C93-658C7F2ACB78
 # GET {{API_HostAddress}}/api/ticket/getTicket/5D244CC3-6226-4323-A9EF-50012E4A014C
+GET {{API_HostAddress}}/api/ticket/getAllTickets
 # POST {{API_HostAddress}}/api/user/updateUser
 # Content-Type: application/json
 # Accept: application/json
@@ -34,4 +35,5 @@ Accept: application/json
   "id": "2EAE267E-2494-4161-92E4-282DF0C7AD1D",
   "customerid": "4C1E465C-38E3-4C22-9C93-658C7F2ACB78"
 }
+
   

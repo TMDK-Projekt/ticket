@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Models;
 using Models.Interfaces;
 using Services.Dto;
+using Services.Shared;
 
 namespace Data.Repositories;
 
@@ -24,7 +25,7 @@ public class TicketRepository : ITicketRepository
         _logger.LogInformation($"Ticket with ID: {ticket.Id} Successfully Created");
         await Task.CompletedTask;
     }
-
+    // TODO: Absprechen inwiefern es erlaubt wird ein Ticket zu löschen, und ob es überhaupt nötig ist den Ticket tree zu entfernen???
     public async Task DeleteAsync(Guid id)
     {
         var ticket = await _context.Tickets
@@ -42,53 +43,30 @@ public class TicketRepository : ITicketRepository
         _context.SaveChanges();
     }
 
-
-    public async Task<IEnumerable<Ticket>> GetTicketTree(Guid ticketId, Guid customerId)
+    public async Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketId, Guid customerId)
     {
         var allUserTickets = await _context.Tickets
             .Where(ticket => ticket.CustomerId == customerId)
             .ToListAsync();
 
-        if (allUserTickets.Count < 0)
+        var startTicket = allUserTickets.FirstOrDefault(ticket => ticket.Id == ticketId);
+
+        if (startTicket == null)
         {
-            _logger.LogError($"No Ticket for user with Id {customerId} Found");
+            _logger.LogError($"Ticket with ID: {ticketId} not found for customer with ID: {customerId}");
             return [];
         }
 
-        var ticketToSearchForRelations = await _context.Tickets
-            .FirstOrDefaultAsync(x => x.Id == ticketId);
-
-        if(ticketToSearchForRelations is null)
-        {
-            _logger.LogError($"No Ticket with Id {ticketId} Found");
-            return [];
-        }
-
-        var relatedTicketTree = new List<Ticket>
-        {
-            ticketToSearchForRelations
-        };
-
-        relatedTicketTree.AddRange(TicketTreeCreator([], ticketToSearchForRelations, allUserTickets).OrderBy(x => x.CreatedDate));
-        return relatedTicketTree;
-    }
-
-    private List<Ticket> TicketTreeCreator(List<Ticket> ticketTree, Ticket currentTicket, List<Ticket> allUserTickets)
-    {
-        var RelatedTicket = allUserTickets.First(x => x.RelatedTicketId == currentTicket.Id);
-        if (RelatedTicket is null)
-        {
-            return ticketTree;
-        }
-        ticketTree.Add(RelatedTicket);
-        return TicketTreeCreator(ticketTree, currentTicket, allUserTickets);
+        var relatedTicketTree = RelatedTicketUtills.BuildTicketTree(startTicket, allUserTickets);
+        return relatedTicketTree.OrderByDescending(ticket => ticket.CreatedDate);
     }
 
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
-        // Alle Individuellen Tickets die kein Ticket Relationship besitzen
-        var tickets = await _context.Tickets.ToListAsync();
-        return tickets;
+        return await _context.Tickets
+            .Where(x => x.RelatedTicketId == Guid.Empty)
+            .OrderByDescending(ticket => ticket.CreatedDate)
+            .ToListAsync();
     }
 
     public async Task<Ticket?> GetByIdAsync(Guid id)
