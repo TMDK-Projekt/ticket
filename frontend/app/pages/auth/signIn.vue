@@ -2,10 +2,20 @@
 import {signInSchema} from "#shared/validation";
 
 const {handleSubmit, values} = useForm({
-  validationSchema: toTypedSchema(signInSchema)
+  validationSchema: toTypedSchema(signInSchema),
+  initialValues: {email: "test@test.com", password: "test"}
 })
 
-const onSubmit = handleSubmit((values) => {console.log(values)})
+
+
+const onSubmit = handleSubmit(async (values) => {
+  console.log(values)
+  const user = await $fetch("http://localhost:5028/api/user/logInUser", {
+    method: "POST",
+    body: {email: values.email, password: values.password}
+  })
+  console.log(user)
+})
 </script>
 
 <template>
