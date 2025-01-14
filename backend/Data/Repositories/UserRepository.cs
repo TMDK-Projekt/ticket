@@ -1,6 +1,8 @@
 ﻿using Data;
-using Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using System;
 namespace Models.Interfaces;
 
 public class UserRepository : IUserRepository
@@ -19,27 +21,84 @@ public class UserRepository : IUserRepository
     {
         _context.Add(user);
         _context.SaveChanges();
-        _logger.LogInformation( $"User with ID: {user.Id} Successfully Created" );
+        _logger.LogInformation($"User with ID: {user.Id} Successfully Created");
         await Task.CompletedTask;
     }
 
-    public Task DeleteAsync(Guid id)
+    public async Task<User?> GetUserAsync(string email, string password)
     {
-        throw new NotImplementedException();
+        var user = await _context.Users
+            .FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
+
+        if (user is null)
+        {
+            _logger.LogError($"No user with email: {email} and password {password} found");
+            return null;
+        }
+
+        return user;
     }
 
-    public Task<IEnumerable<User>> GetAllAsync()
+    public async Task<User?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+        {
+            _logger.LogError($"User with ID: {id} not found.");
+            return null;
+        }
+        return user;
     }
 
-    public Task<User> GetByIdAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+        {
+            _logger.LogError($"User with ID: {id} Not Found");
+            return;
+        }
+
+        _context.Remove(user);
+        _logger.LogInformation($"User with ID: {id} Successfully Deleted");
+        await _context.SaveChangesAsync();
     }
 
-    public Task UpdateAsync(User user)
+    public async Task UpdateAsync(User user)
     {
-        throw new NotImplementedException();
+        var existingUser = await _context.Users.FindAsync(user.Id);
+        if (existingUser == null)
+        {
+            _logger.LogWarning($"User with ID {user.Id} not found. Update operation aborted.");
+            return;
+        }
+
+        existingUser.FirstName = !string.IsNullOrWhiteSpace(user.FirstName) ? user.FirstName : existingUser.FirstName;
+        existingUser.LastName = !string.IsNullOrWhiteSpace(user.LastName) ? user.LastName : existingUser.LastName;
+        existingUser.Email = !string.IsNullOrWhiteSpace(user.Email) ? user.Email : existingUser.Email;
+        existingUser.Password = !string.IsNullOrWhiteSpace(user.Password) ? user.Password : existingUser.Password;
+
+        _context.Users.Update(existingUser);
+        _logger.LogInformation($"User with ID {user.Id} was successfully updated.");
+        await _context.SaveChangesAsync();
     }
+
+    public async Task<(string FirstName, string LastName)?> GetUserNameByIdAsync(Guid id)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+        {
+            _logger.LogWarning($"User with ID {id} not found.");
+            return null;
+        }
+
+        return (user.FirstName, user.LastName);
+    }
+
 }

@@ -22,29 +22,38 @@ public class TicketController : ControllerBase
         return Ok(ticket);
     }
 
-    [HttpPost("createTicket")]
-    public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDto dto)
+    [HttpGet("getAllTickets")]
+    public async Task<IActionResult> GetAllTickets()
     {
-        await _ticketService.CreateTicketAsync(dto);
+        var tickets = await _ticketService.GetAllAsync();
+        return Ok(tickets);
+    }
+
+    [HttpPost("getAllRelatedTickets")]
+    public async Task<IActionResult> GetRelatedTicketTree([FromBody] TicketDto dto)
+    {
+        var tickets = await _ticketService.GetRelatedTicketTree(dto.Id, dto.CustomerId);
+        return Ok(tickets);
+    }
+
+    [HttpPost("assignTicket")]
+    public async Task<IActionResult> AssignTicket( [FromBody] TicketDto dto)
+    {
+        await _ticketService.AssignAsync(dto);
         return Ok();
     }
 
-
-    // POST api/<TicketController>
-    [HttpPost]
-    public void Post([FromBody] string value)
+    [HttpPost("createAttachedTicket")]
+    public async Task<IActionResult> CreateAttachedTicket([FromBody] TicketDto dto)
     {
+        await _ticketService.CreateAttachedTicketAsync(dto);
+        return Ok();
     }
 
-    // PUT api/<TicketController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpPost("createTicket")]
+    public async Task<IActionResult> CreateTicket([FromBody] TicketDto dto)
     {
-    }
-
-    // DELETE api/<TicketController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
+        await _ticketService.CreateTicketAsync(dto);
+        return Ok();
     }
 }

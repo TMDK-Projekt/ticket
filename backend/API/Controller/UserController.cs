@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Dto;
+using System.Runtime.CompilerServices;
 namespace API.Controllers;
 
 [Route("api/user")]
@@ -15,42 +16,48 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("createUser")]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
+    public async Task<IActionResult> CreateUser([FromBody] UserDto dto)
     {
         await _userService.CreateUser(dto);
         return Ok();
     }
 
-
-    // GET: api/<UserController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    [HttpPost("logInUser")]
+    public async Task<Guid> LogInUser([FromBody] UserDto dto)
     {
-        return new string[] { "value1", "value2" };
+        var result = await _userService.GetUserAsync(dto.Email, dto.Password);
+        return result.Id;
     }
 
-    // GET api/<UserController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    [HttpPost("updateUser")]
+    public async Task<IActionResult> UpdateUser([FromBody] UserDto dto)
     {
-        return "value";
+        await _userService.UpdateUser(dto);
+        return Ok();
     }
 
-    // POST api/<UserController>
-    [HttpPost]
-    public void Post([FromBody] string value)
+    [HttpGet("deleteUser/{id}")]
+    public async Task<IActionResult> DeleteUser(Guid id)
     {
+        await _userService.DeleteUserById(id);
+        return Ok();
     }
 
-    // PUT api/<UserController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpGet("getUser/{id}")]
+    public async Task<IActionResult> GetUser(Guid id)
     {
+        await _userService.GetUserById(id);
+        return Ok();
     }
 
-    // DELETE api/<UserController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpGet("getUserName/{id}")]
+    public async Task<IActionResult> GetUserName(Guid id)
     {
+        var result = await _userService.GetUserNameById(id);
+        return Ok(new
+        {
+            result.Value.FirstName,
+            result.Value.LastName
+        });
     }
 }

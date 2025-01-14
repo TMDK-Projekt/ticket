@@ -10,7 +10,7 @@ public class TicketService
     public TicketService(ITicketRepository ticketRepository) =>
         _ticketRepository = ticketRepository;
 
-    public async Task CreateTicketAsync(CreateTicketDto dto)
+    public async Task CreateTicketAsync(TicketDto dto)
     {
         var ticket = new Ticket
         {
@@ -18,10 +18,29 @@ public class TicketService
             CustomerId = dto.CustomerId,
             Reason = dto.Reason,
             Status = Status.Unassigned,
+            Description = dto.Description,
             CreatedDate = DateTime.Now
         };
 
         await _ticketRepository.AddAsync(ticket);
+    }
+
+    public async Task CreateAttachedTicketAsync(TicketDto dto )
+    {
+        var ticket = new Ticket
+        {
+            Id = new Guid(),
+            CustomerId = dto.CustomerId,
+            EmployeeId = dto.EmployeeId,
+            Reason = dto.Reason,
+            Status = Status.Assigned,
+            Description = dto.Description,
+            CreatedDate = DateTime.Now
+        };
+
+        await _ticketRepository.AddAsync(ticket);
+
+        await _ticketRepository.UpdateRelatedTicketIdAsync(dto.Id, ticket.Id);
     }
 
     public async Task<Ticket?> GetTicketByIdAsync(Guid id)
@@ -42,6 +61,15 @@ public class TicketService
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
         return await _ticketRepository.GetAllAsync();
+    }
+
+    public async Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketId, Guid customerId)
+    {
+        return await _ticketRepository.GetRelatedTicketTree(ticketId,customerId);
+    }
+    public async Task AssignAsync(TicketDto dto)
+    {
+        await _ticketRepository.AssignAsync(dto.Id,dto.EmployeeId);
     }
 }
 

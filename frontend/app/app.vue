@@ -1,12 +1,12 @@
+<script setup lang="ts">
+</script>
+
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <NuxtLoadingIndicator color="blue"/>
+    <NuxtLoadingIndicator color="blue" />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </div>
 </template>
-
-<script setup lang="ts">
-</script>
