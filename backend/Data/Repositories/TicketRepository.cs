@@ -97,7 +97,7 @@ public class TicketRepository : ITicketRepository
         await Task.CompletedTask;
     }
 
-    public async Task UpdateAsync(Ticket ticket)
+    public async Task UpdateDescriptionAsync(Ticket ticket)
     {
         //Wenn Ticket Related Id hat dann darf es nicht geupdated werden
         //Wenn Ticket Employee Id hat dann darf es nicht geupdated werden
@@ -119,8 +119,24 @@ public class TicketRepository : ITicketRepository
         }
 
         ticketToUpdate.Description = ticket.Description;
+        _context.SaveChanges();
         await Task.CompletedTask;
+    }
 
+    public async Task UpdateStatusAsync( Ticket ticket, Status newStatus )
+    {
+        var ticketToUpdate = await _context.Tickets
+           .FirstOrDefaultAsync( x => x.Id == ticket.Id );
+
+        if ( ticketToUpdate is null )
+        {
+            _logger.LogError( $"No Ticket with id: {ticket.Id} Found" );
+            return;
+        }
+
+        ticketToUpdate.Status = newStatus;
+        _context.SaveChanges();
+        await Task.CompletedTask;
     }
 
     public async Task AssignAsync( Guid ticketId, Guid userId )

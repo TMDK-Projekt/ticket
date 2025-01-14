@@ -52,9 +52,14 @@ public class TicketService
         return await _ticketRepository.GetByIdAsync(id);
     }
 
-    public async Task UpdateAsync(Ticket ticket)
+    public async Task UpdateDescriptionAsync(Ticket ticket)
     {
-        await _ticketRepository.UpdateAsync(ticket);
+        await _ticketRepository.UpdateDescriptionAsync(ticket);
+    }
+
+    public async Task UpdateStatusAsync( Ticket ticket, Status newStatus )
+    {
+        await _ticketRepository.UpdateStatusAsync( ticket, newStatus );
     }
 
     public async Task DeleteAsync(Guid id)
