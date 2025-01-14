@@ -15,7 +15,7 @@ const onSubmit = handleSubmit((values) => {console.log(values)})
         <UiCardTitle>Login</UiCardTitle>
       </UiCardHeader>
 
-    <UiCardContent>
+    <UiCardContent class="gap-2 flex flex-col">
       {{values}}
       <ValidatedInput name="email" label="Email" type="email" />
       <ValidatedInput name="password" label="Passwort" type="password"/>
