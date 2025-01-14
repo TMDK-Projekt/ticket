@@ -6,15 +6,26 @@ const {handleSubmit, values} = useForm({
   initialValues: {email: "test@test.com", password: "test"}
 })
 
-
+const userCookie = useUser()
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log(values)
-  const user = await $fetch("http://localhost:5028/api/user/logInUser", {
-    method: "POST",
-    body: {email: values.email, password: values.password}
-  })
-  console.log(user)
+  try{
+    console.log(values)
+    const user = await $fetch<string>("/api/signIn", {
+      method: "POST",
+      body: {email: values.email, password: values.password}
+    })
+    if (user === "00000000-0000-0000-0000-000000000000") {
+      userCookie.value = null;
+      return
+    }
+    userCookie.value = user;
+    await navigateTo("/")
+  } catch {
+    userCookie.value = null;
+    await navigateTo("/auth/signIn")
+    return
+  }
 })
 </script>
 
