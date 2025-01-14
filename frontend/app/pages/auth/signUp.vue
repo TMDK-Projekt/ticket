@@ -3,10 +3,23 @@
 import {signUpSchema} from "#shared/validation";
 
 const {handleSubmit, values} = useForm({
-  validationSchema: toTypedSchema(signUpSchema)
+  validationSchema: toTypedSchema(signUpSchema),
+  initialValues: {firstName: "Tim", lastName: "Holz", email: "t.t@email.com", password: "Test1234", }
 })
 
-const onSubmit = handleSubmit((values) => {console.log(values)})
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    console.log(values)
+    const user = await $fetch<string>("/api/signUp", {
+      method: "POST",
+      body: {firstName: values.firstName, lastName: values.lastName, email: values.email, password: values.password}
+    })
+    await navigateTo("/")
+  } catch {
+    await navigateTo("/auth/signUp")
+  }
+})
+
 </script>
 
 <template>
