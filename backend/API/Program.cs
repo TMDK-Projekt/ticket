@@ -15,6 +15,8 @@ builder.Services.AddScoped<TicketService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddScoped<AIService>();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();

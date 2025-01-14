@@ -6,9 +6,13 @@ namespace Services;
 public class TicketService
 {
     private readonly ITicketRepository _ticketRepository;
+    private readonly AIService _aIService;
 
-    public TicketService(ITicketRepository ticketRepository) =>
+    public TicketService(ITicketRepository ticketRepository, AIService aIService)
+    {
         _ticketRepository = ticketRepository;
+        _aIService = aIService;
+    }
 
     public async Task CreateTicketAsync(TicketDto dto)
     {
@@ -70,6 +74,11 @@ public class TicketService
     public async Task AssignAsync(TicketDto dto)
     {
         await _ticketRepository.AssignAsync(dto.Id,dto.EmployeeId);
+    }
+
+    public async Task<string?> GenerateTicketResponse(string prompt)
+    {
+        return await _aIService.CallOpenAIAsync(prompt) ?? throw new Exception("API Response cant be null");
     }
 }
 

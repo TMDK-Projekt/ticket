@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Dto;
+using Services.Shared;
 
 namespace API.Controller;
 
@@ -34,6 +35,13 @@ public class TicketController : ControllerBase
     {
         var tickets = await _ticketService.GetRelatedTicketTree(dto.Id, dto.CustomerId);
         return Ok(tickets);
+    }
+
+    [HttpPost("getGeneratedTicketResponse")]
+    public async Task<IActionResult> GenerateTicketResponse([FromBody] GenerateTicketDto request)
+    {
+        var response = await _ticketService.GenerateTicketResponse(request.Prompt);
+        return Ok(response);
     }
 
     [HttpPost("assignTicket")]
