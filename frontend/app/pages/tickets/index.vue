@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const tickets = [
+const tickets = ref([
   {
     "id": "f1e1f7a8-19e7-40cb-b72f-c79c5a649c70",
     "customerId": "cf7d7cb8-d1af-4823-961f-7ab03466a2bc",
@@ -99,11 +99,35 @@ const tickets = [
     "description": "Customer wants to upgrade their subscription plan.",
     "response": "Upgrade processed successfully."
   },
-]
+])
+
+const reasons = ref([
+  {
+    value: "fehlercode",
+    description: "Fehlercode"
+  },
+  {
+    value: "hardwareproblem",
+    description: "Hardwareproblem"
+  },
+  {
+    value: "support",
+    description: "Support"
+  },
+  {
+    value: "softwareUpdates",
+    description: "Software-Updates"
+  },
+  {
+    value: "sonstiges",
+    description: "Sonstiges"
+  }
+])
+
 
 const filter = ref(null)
 const filtered = computed(() => {
-  return tickets
+  return tickets.value
       .sort((a, b) => {
         if (a.status !== b.status) {
           return a.status - b.status;
@@ -113,15 +137,41 @@ const filtered = computed(() => {
       .filter(t => !filter.value || t.status == filter.value);
 });
 
+
+const status = {
+  0: 'Nicht Zugewiesen',
+  1: 'Zugewiesen',
+  2: 'Warteliste',
+  3: 'Geschlossen',
+  9999: 'Alle'
+}
 </script>
 
 <template>
-  <div>
-    <div class="mt-5 flex grow justify-end">
-      <input v-model="filter">
-      <UiButton>
-        Ticket erstellen
-      </UiButton>
+  <div class="flex gap-2 flex-col">
+    <div class="mt-5 flex grow justify-end gap-2">
+      <UiSelect v-model="filter">
+        <UiSelectTrigger>
+          <UiSelectValue placeholder="Filter Status" />
+        </UiSelectTrigger>
+        <UiSelectContent>
+          <UiSelectGroup>
+            <UiSelectItem
+                class="font-semibold"
+                :key="useId()"
+                :value="Object.keys(status)[index]"
+                v-for="(stat,index) in status">
+              {{stat}}
+            </UiSelectItem>
+          </UiSelectGroup>
+        </UiSelectContent>
+
+      </UiSelect>
+    </div>
+    <div class="flex justify-end">
+       <span class="font-semibold text-sm">
+      {{filtered.length}} Tickets
+    </span>
     </div>
   </div>
 
