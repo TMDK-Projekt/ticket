@@ -100,6 +100,12 @@ const status = {
           <span class="text-sm font-semibold text-muted-foreground">
             {{ timeAgo(new Date(ticket.createdDate)) }}
           </span>
+
+          <UiButton as-child>
+            <NuxtLink :to="`/tickets/${ticket.id}`">
+              Ticket Bearbeiten
+            </NuxtLink>
+          </UiButton>
         </UiCardFooter>
       </UiCard>
     </div>
