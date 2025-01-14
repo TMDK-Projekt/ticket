@@ -26,7 +26,10 @@ public class UserController : ControllerBase
     public async Task<Guid> LogInUser([FromBody] UserDto dto)
     {
         var result = await _userService.GetUserAsync(dto.Email, dto.Password);
-        return result.Id;
+        if ( result is not null )
+            return result.Id;
+        else
+            return Guid.Empty;
     }
 
     [HttpPost("updateUser")]

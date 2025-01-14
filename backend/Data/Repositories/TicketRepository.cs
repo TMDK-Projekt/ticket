@@ -86,6 +86,11 @@ public class TicketRepository : ITicketRepository
     public async Task UpdateRelatedTicketIdAsync( Guid initialTicketId, Guid attachedTicketId )
     {
         var initialTicket = await _context.Tickets.FirstOrDefaultAsync(x => x.Id == initialTicketId);
+        if (initialTicket is null )
+        {
+            _logger.LogInformation( $"Ticket with ID: {initialTicketId} could not be found" );
+            return;
+        }
         initialTicket.RelatedTicketId = attachedTicketId;
         _context.SaveChanges();
         _logger.LogInformation( $"Ticket with ID: {attachedTicketId} was referenced in ticket with ID: {initialTicketId}" );
