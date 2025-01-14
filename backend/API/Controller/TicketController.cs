@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Models;
 using Services;
 using Services.Dto;
 using Services.Shared;
@@ -45,11 +46,11 @@ public class TicketController : ControllerBase
     }
 
     [HttpPost("assignTicket")]
-    public async Task<IActionResult> AssignTicket( [FromBody] TicketDto dto)
+    public async Task<IActionResult> AssignTicket([FromBody] TicketDto dto)
     {
-        await _ticketService.AssignAsync(dto);
-        return Ok();
-    }
+        var ticket = await _ticketService.AssignAsync(dto);
+        return Ok(ticket);
+    } 
 
     [HttpPost("createAttachedTicket")]
     public async Task<IActionResult> CreateAttachedTicket([FromBody] TicketDto dto)
@@ -63,5 +64,19 @@ public class TicketController : ControllerBase
     {
         await _ticketService.CreateTicketAsync(dto);
         return Ok();
+    }
+
+    [HttpPost( "updateDescription" )]
+    public async Task<IActionResult> updateDescription( [FromBody] TicketDto dto )
+    {
+        var ticket = await _ticketService.UpdateDescriptionAsync(dto);
+        return Ok(ticket);
+    }
+
+    [HttpPost( "updateStatus" )] //we need the Status as number
+    public async Task<IActionResult> updateStatus([FromBody] TicketDto dto )
+    {
+        var ticket = await _ticketService.UpdateStatusAsync(dto);
+        return Ok(ticket);
     }
 }

@@ -52,14 +52,14 @@ public class TicketService
         return await _ticketRepository.GetByIdAsync(id);
     }
 
-    public async Task UpdateDescriptionAsync(Ticket ticket)
+    public async Task<Ticket?> UpdateDescriptionAsync(TicketDto dto)
     {
-        await _ticketRepository.UpdateDescriptionAsync(ticket);
+        return await _ticketRepository.UpdateDescriptionAsync(dto.Id, dto.Description);
     }
 
-    public async Task UpdateStatusAsync( Ticket ticket, Status newStatus )
+    public async Task<Ticket?> UpdateStatusAsync( TicketDto dto )
     {
-        await _ticketRepository.UpdateStatusAsync( ticket, newStatus );
+        return await _ticketRepository.UpdateStatusAsync( dto.Id, dto.Status );
     }
 
     public async Task DeleteAsync(Guid id)
@@ -76,9 +76,9 @@ public class TicketService
     {
         return await _ticketRepository.GetRelatedTicketTree(ticketId,customerId);
     }
-    public async Task AssignAsync(TicketDto dto)
+    public async Task<Ticket?> AssignAsync(TicketDto dto)
     {
-        await _ticketRepository.AssignAsync(dto.Id,dto.EmployeeId);
+        return await _ticketRepository.AssignAsync(dto.Id, dto.EmployeeId);
     }
 
     public async Task<string?> GenerateTicketResponse(string prompt)

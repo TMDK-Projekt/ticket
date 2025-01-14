@@ -4,6 +4,7 @@ using Models;
 using Models.Interfaces;
 using Services.Dto;
 using Services.Shared;
+using System;
 
 namespace Data.Repositories;
 
@@ -97,67 +98,74 @@ public class TicketRepository : ITicketRepository
         await Task.CompletedTask;
     }
 
-    public async Task UpdateDescriptionAsync(Ticket ticket)
+    public async Task<Ticket?> UpdateDescriptionAsync(Guid ticketId, string newDescription)
     {
         //Wenn Ticket Related Id hat dann darf es nicht geupdated werden
         //Wenn Ticket Employee Id hat dann darf es nicht geupdated werden
 
         var ticketToUpdate = await _context.Tickets
-           .FirstOrDefaultAsync(x => x.Id == ticket.Id);
+           .FirstOrDefaultAsync(x => x.Id == ticketId);
 
         if (ticketToUpdate is null)
         {
-            _logger.LogError($"No Ticket with id: {ticket.Id} Found");
-            return;
+            _logger.LogError($"No Ticket with id: {ticketId} Found");
+            return null;
         }
 
         if (ticketToUpdate.RelatedTicketId != Guid.Empty || ticketToUpdate.EmployeeId != Guid.Empty)
         {
             _logger.LogError($"Cant Update Ticket because it either has " +
                 $"a Related ticket or is already assinged to an Employee");
-            return;
+            return null;
         }
 
-        ticketToUpdate.Description = ticket.Description;
+        ticketToUpdate.Description = newDescription;
         _context.SaveChanges();
-        await Task.CompletedTask;
-    }
+        return ticketToUpdate;
+            }
 
-    public async Task UpdateStatusAsync( Ticket ticket, Status newStatus )
+    public async Task<Ticket?> UpdateStatusAsync( Guid ticketId, Status newStatus )
     {
         var ticketToUpdate = await _context.Tickets
-           .FirstOrDefaultAsync( x => x.Id == ticket.Id );
+           .FirstOrDefaultAsync( x => x.Id == ticketId );
 
         if ( ticketToUpdate is null )
         {
-            _logger.LogError( $"No Ticket with id: {ticket.Id} Found" );
-            return;
+            _logger.LogError( $"No Ticket with id: {ticketId} Found" );
+            return null;
+        }
+
+        if ( !Enum.IsDefined( typeof( Status ), newStatus ) )
+        {
+            _logger.LogError( $"Status: {newStatus} is invalid" );
+            return null;
         }
 
         ticketToUpdate.Status = newStatus;
         _context.SaveChanges();
-        await Task.CompletedTask;
+        return ticketToUpdate;
     }
 
-    public async Task AssignAsync( Guid ticketId, Guid userId )
+    public async Task<Ticket?> AssignAsync( Guid ticketId, Guid userId )
     {
-        var result = _context.Tickets.FirstOrDefault(x=> x.Id == ticketId); // the needed ticket
-        if (result is null)
+        var ticket = await _context.Tickets.FirstOrDefaultAsync(x=> x.Id == ticketId); // the needed ticket
+
+        if (ticket is null)
         {
             _logger.LogError( $"No Ticket with id: {ticketId} Found" );
-            return;
+            return null;
         }
 
         if ( _context.Users.First(x => x.Id == userId) is null)
         {
             _logger.LogError( $"No User with id: {userId} Found" );
-            return;
+            return null;
         }
 
-        result.EmployeeId = userId;
-        result.Status = Status.Assigned;
+        ticket.EmployeeId = userId;
+        ticket.Status = Status.Assigned;
         _context.SaveChanges();
         _logger.LogInformation($"Ticket with ID: {ticketId} assigned to user with ID: {userId}");
-        await Task.CompletedTask;
+        return ticket;
     }
 }
