@@ -17,6 +17,15 @@ builder.Services.AddScoped<UserService>();
 
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", policyBuilder =>
+    {
+        policyBuilder.AllowAnyHeader()
+            .AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
