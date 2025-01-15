@@ -110,9 +110,6 @@ public class TicketRepository : ITicketRepository
 
     public async Task<Ticket?> UpdateDescriptionAsync(Guid ticketId, string newDescription)
     {
-        //Wenn Ticket Related Id hat dann darf es nicht geupdated werden
-        //Wenn Ticket Employee Id hat dann darf es nicht geupdated werden
-
         var ticketToUpdate = await _context.Tickets
            .FirstOrDefaultAsync(x => x.Id == ticketId);
 
