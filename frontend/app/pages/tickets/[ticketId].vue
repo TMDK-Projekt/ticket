@@ -6,7 +6,7 @@ const { data: ticket, refresh } = await useFetch(`/api/tickets/${route.params.ti
 
 const { handleSubmit } = useForm({
   validationSchema: toTypedSchema(z.object({
-    reply: z.string(),
+    response: z.string(),
   })),
 })
 
@@ -15,7 +15,7 @@ const onSubmit = handleSubmit(async (value) => {
     method: 'POST',
     body: {
       ticketId: route.params.ticketId,
-      reply: value.reply,
+      response: value.response,
     },
   })
   await refresh()
