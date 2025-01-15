@@ -34,11 +34,9 @@ const onSubmit = handleSubmit(async (value) => {
         <UiCardDescription class="flex flex-col">
           <span>
             User: {{ ticket.customerId }}
-
           </span>
           <span>
-            Zugewiesener Mitarbeiter: {{ ticket.employeeId === "00000000-0000-0000-0000-000000000000" && "Kein Mitarbeiter Zugewiesen" }}
-
+            Zugewiesener Mitarbeiter: {{ ticket.employeeId "Joa was machen wir?" }}
           </span>
         </UiCardDescription>
       </UiCardHeader>
@@ -68,12 +66,11 @@ const onSubmit = handleSubmit(async (value) => {
           </p>
         </UiCardContent>
         <UiCardFooter>
-          {{ ticket }}
+          {{ timeAgo(new Date( ticket.createdAt)) }}
         </UiCardFooter>
       </UiCard>
 
       <form novalidate class="flex gap-2 justify-end flex-col " @submit="onSubmit">
-        {{ values }}
         <ValidatedTextarea name="response" label="Antwort" />
         <UiButton>Abschicken</UiButton>
       </form>
@@ -89,11 +86,6 @@ const onSubmit = handleSubmit(async (value) => {
           {{ ticket.response }}
         </p>
       </UiCardContent>
-      <UiCardFooter>
-        {{ ticket }}
-      </UiCardFooter>
     </UiCard>
-    </div>
-
-
+  </div>
 </template>
