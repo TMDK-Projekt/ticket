@@ -4,7 +4,9 @@ import { z } from 'zod'
 const route = useRoute()
 const { data: ticket, refresh } = await useFetch(`/api/tickets/${route.params.ticketId}`)
 
-const { handleSubmit } = useForm({
+const user = useUser()
+
+const { handleSubmit, values } = useForm({
   validationSchema: toTypedSchema(z.object({
     response: z.string(),
   })),
@@ -14,7 +16,7 @@ const onSubmit = handleSubmit(async (value) => {
   await $fetch('/api/tickets/reply', {
     method: 'POST',
     body: {
-      ticketId: route.params.ticketId,
+      id: route.params.ticketId,
       response: value.response,
     },
   })
@@ -23,11 +25,6 @@ const onSubmit = handleSubmit(async (value) => {
 </script>
 
 <template>
-  <!--  <div class="font-semibold text-lg"> -->
-  <!--    Von User: {{ fromUser.lastName ?? '' }} {{ fromUser.firstName ?? '' }} -->
-  <!--  </div> -->
-  <!--  {{ticket}} -->
-
   <div class="flex flex-col gap-4 mt-8">
     <UiCard>
       <UiCardHeader>
@@ -58,14 +55,45 @@ const onSubmit = handleSubmit(async (value) => {
       </UiCardContent>
     </UiCard>
 
-    <p v-if="ticket.response">
-      Antwort:
-      {{ ticket.response }}
-    </p>
+    <div v-if="(ticket.employeeId === user.id) || ticket.response == ''">
+      <UiCard>
+        <UiCardHeader>
+          <UiCardTitle>
+            Antwort
+          </UiCardTitle>
+        </UiCardHeader>
+        <UiCardContent>
+          <p>
+            {{ ticket.response }}
+          </p>
+        </UiCardContent>
+        <UiCardFooter>
+          {{ ticket }}
+        </UiCardFooter>
+      </UiCard>
 
-    <form v-else novalidate class="flex gap-2 justify-end flex-col " @submit="onSubmit">
-      <ValidatedTextarea name="reply" label="Antwort" />
-      <UiButton>Abschicken</UiButton>
-    </form>
-  </div>
+      <form novalidate class="flex gap-2 justify-end flex-col " @submit="onSubmit">
+        {{ values }}
+        <ValidatedTextarea name="response" label="Antwort" />
+        <UiButton>Abschicken</UiButton>
+      </form>
+    </div>
+    <UiCard v-else>
+      <UiCardHeader>
+        <UiCardTitle>
+          Antwort
+        </UiCardTitle>
+      </UiCardHeader>
+      <UiCardContent>
+        <p>
+          {{ ticket.response }}
+        </p>
+      </UiCardContent>
+      <UiCardFooter>
+        {{ ticket }}
+      </UiCardFooter>
+    </UiCard>
+    </div>
+
+
 </template>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const { data: tickets } = await useFetch('http://localhost:5028/api/ticket/getAllTickets')
 
+const user = useUser()
+
 const filter = ref(null)
 const filtered = computed(() => {
   return tickets.value
@@ -19,6 +21,16 @@ const status = {
   2: 'Warteliste',
   3: 'Geschlossen',
   9999: 'Alle',
+}
+
+const assignTicketToMe = async (v:{ticketId:string})=>{
+  await $fetch('/api/tickets/assign', {
+    method: 'POST',
+    body: {
+      employeeId: user.value,
+      id: v.ticketId
+    }
+  })
 }
 </script>
 
@@ -78,6 +90,9 @@ const status = {
           <span class="text-sm font-semibold text-muted-foreground">
             {{ timeAgo(new Date(ticket.createdDate)) }}
           </span>
+<UiButton @click="assignTicketToMe({ticketId:ticket.id})">
+  Mir Zuweisen
+</UiButton>
 
           <UiButton as-child>
             <NuxtLink :to="`/tickets/${ticket.id}`">
