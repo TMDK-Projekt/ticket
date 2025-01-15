@@ -132,7 +132,30 @@ public class TicketRepository : ITicketRepository
         ticketToUpdate.Description = newDescription;
         _context.SaveChanges();
         return ticketToUpdate;
-            }
+    }
+
+    public async Task RevokeTicket(Guid id)
+    {
+        var ticket = await _context.Tickets
+           .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (ticket == null)
+        {
+            _logger.LogError($"No Ticket with id: {id} Found");
+            return;
+        }
+
+        if (ticket.RelatedTicketId != Guid.Empty || ticket.EmployeeId != Guid.Empty)
+        {
+            _logger.LogError($"Cant Revoke Ticket because it either has " +
+                $"a Related ticket or is already assinged to an Employee");
+            return;
+        }
+
+        _context.Tickets.Remove(ticket);
+        _logger.LogInformation($"Ticket with id: {ticket.Id} Revoked");
+        _context.SaveChanges();
+    }
 
     public async Task<Ticket?> UpdateStatusAsync( Guid ticketId, Status newStatus )
     {

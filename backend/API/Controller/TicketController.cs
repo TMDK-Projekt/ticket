@@ -73,6 +73,13 @@ public class TicketController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("revokeTicket/{id}")]
+    public async Task<IActionResult> DeleteTicket(Guid id)
+    {
+        await _ticketService.RevokeTicket(id);
+        return Ok();
+    }
+
     [HttpPost( "updateDescription" )]
     public async Task<IActionResult> updateDescription( [FromBody] TicketDto dto )
     {

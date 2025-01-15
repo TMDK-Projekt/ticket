@@ -67,6 +67,11 @@ public class TicketService
         await _ticketRepository.DeleteAsync(id);
     }
 
+    public async Task RevokeTicket(Guid id)
+    {
+        await _ticketRepository.RevokeTicket(id);
+    }
+
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
         return await _ticketRepository.GetAllAsync();
