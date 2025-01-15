@@ -1,29 +1,6 @@
 <script setup lang="ts">
 const { data: tickets } = await useFetch('http://localhost:5028/api/ticket/getAllTickets')
 
-const reasons = ref([
-  {
-    value: 'fehlercode',
-    description: 'Fehlercode',
-  },
-  {
-    value: 'hardwareproblem',
-    description: 'Hardwareproblem',
-  },
-  {
-    value: 'support',
-    description: 'Support',
-  },
-  {
-    value: 'softwareUpdates',
-    description: 'Software-Updates',
-  },
-  {
-    value: 'sonstiges',
-    description: 'Sonstiges',
-  },
-])
-
 const filter = ref(null)
 const filtered = computed(() => {
   return tickets.value
@@ -46,6 +23,7 @@ const status = {
 </script>
 
 <template>
+  {{ tickets }}
   <div class="flex gap-2 flex-col">
     <div class="mt-5 flex grow justify-end gap-2">
       <UiSelect v-model="filter">

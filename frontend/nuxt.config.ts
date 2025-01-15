@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@formkit/auto-animate',
     '@nuxt/eslint',
+    '@vee-validate/nuxt',
   ],
   eslint: {
     config: {

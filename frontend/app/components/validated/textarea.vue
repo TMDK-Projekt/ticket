@@ -6,7 +6,7 @@ const { name, label } = defineProps<{
 
 const { value, errorMessage } = useField(() => name)
 
-const id = computed(() => `input-${name}-${useId()}`)
+const id = computed(() => `textarea-${name}-${useId()}`)
 </script>
 
 <template>
@@ -15,7 +15,7 @@ const id = computed(() => `input-${name}-${useId()}`)
       {{ label }}
     </UiLabel>
 
-    <UiInput v-bind="$attrs" :id v-model="value" :name />
+    <UiTextarea v-bind="$attrs" :id v-model="value" :name />
 
     <ValidatedFieldError :error-message />
   </div>
