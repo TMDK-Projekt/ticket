@@ -26,13 +26,11 @@ public class TicketRepository : ITicketRepository
         _logger.LogInformation($"Ticket with ID: {ticket.Id} Successfully Created");
         await Task.CompletedTask;
     }
-    // TODO: Absprechen inwiefern es erlaubt wird ein Ticket zu löschen, und ob es überhaupt nötig ist den Ticket tree zu entfernen???
+
     public async Task DeleteAsync(Guid id)
     {
         var ticket = await _context.Tickets
             .FirstOrDefaultAsync(x => x.Id == id);
-
-        // Alle Related Tickets müssen auch noch gelöscht werden (Methode schreiben mit GetAllRelatedTickets)
 
         if (ticket == null)
         {
@@ -40,7 +38,19 @@ public class TicketRepository : ITicketRepository
             return;
         }
 
-        _context.Tickets.Remove(ticket);
+        if (ticket.EmployeeId != Guid.Empty)
+        {
+            _logger.LogError($"Cant Update Ticket because it is already assinged to an Employee");
+            return;
+        }
+
+        var ticketTree = await GetRelatedTicketTree(ticket.Id, ticket.CustomerId);
+        foreach (var ticketToDelete in ticketTree)
+        {
+            _context.Tickets.Remove(ticketToDelete);
+            _logger.LogInformation($"Ticket with id: {ticketToDelete.Id} Deleted");
+        }
+
         _context.SaveChanges();
     }
 

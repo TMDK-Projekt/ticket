@@ -66,6 +66,13 @@ public class TicketController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("deleteTicket")]
+    public async Task<IActionResult> DeleteTicket([FromBody] TicketDto dto)
+    {
+        await _ticketService.DeleteAsync(dto.Id);
+        return Ok();
+    }
+
     [HttpPost( "updateDescription" )]
     public async Task<IActionResult> updateDescription( [FromBody] TicketDto dto )
     {
