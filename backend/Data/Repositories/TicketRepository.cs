@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Models;
 using Models.Interfaces;
-using Services.Dto;
 using Services.Shared;
-using System;
 
 namespace Data.Repositories;
 
@@ -67,6 +65,13 @@ public class TicketRepository : ITicketRepository
         return await _context.Tickets
             .Where(x => x.RelatedTicketId == Guid.Empty)
             .OrderByDescending(ticket => ticket.CreatedDate)
+            .ToListAsync();
+    }
+    public async Task<IEnumerable<Ticket>> GetAllFilteredAsync(Status status)
+    {
+        return await _context.Tickets
+            .Where( x => x.RelatedTicketId == Guid.Empty && x.Status == status)
+            .OrderByDescending( ticket => ticket.CreatedDate )
             .ToListAsync();
     }
 
@@ -166,6 +171,22 @@ public class TicketRepository : ITicketRepository
         ticket.Status = Status.Assigned;
         _context.SaveChanges();
         _logger.LogInformation($"Ticket with ID: {ticketId} assigned to user with ID: {userId}");
+        return ticket;
+    }
+
+    public async Task<Ticket?> SetTicketResponse( Guid ticketId, string response )
+    {
+        var ticket = await _context.Tickets.FirstOrDefaultAsync( x => x.Id == ticketId ); // the needed ticket
+
+        if ( ticket is null )
+        {
+            _logger.LogError( $"No Ticket with id: {ticketId} Found" );
+            return null;
+        }
+
+        ticket.Response = response;
+        _context.SaveChanges();
+        _logger.LogInformation( $"Ticket with ID: {ticketId} has answer: {response}" );
         return ticket;
     }
 }
