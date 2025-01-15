@@ -90,5 +90,10 @@ public class TicketService
     {
         return await _aIService.CallOpenAIAsync(prompt) ?? throw new Exception("API Response cant be null");
     }
+
+    public async Task<IEnumerable<Ticket>> GetFilteredTickets(Status? status, DateTime? start, DateTime? end)
+    {
+        return await _ticketRepository.GetFilteredTickets(status, start, end);
+    }
 }
 

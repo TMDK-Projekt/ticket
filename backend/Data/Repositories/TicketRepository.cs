@@ -198,4 +198,29 @@ public class TicketRepository : ITicketRepository
         _logger.LogInformation($"Ticket with ID: {ticketId} assigned to user with ID: {userId}");
         return ticket;
     }
+
+    public async Task<IEnumerable<Ticket>> GetFilteredTickets(Status? status, DateTime? start, DateTime? end)
+    {
+        var tickets = await _context.Tickets
+            .Where(x => x.RelatedTicketId == Guid.Empty)
+            .OrderByDescending(ticket => ticket.CreatedDate)
+            .ToListAsync();
+
+        if(status.HasValue)
+        {
+            tickets = [.. tickets.Where(x => x.Status == status)];
+        }
+
+        if(start.HasValue)
+        {
+            tickets = [.. tickets.Where(x => x.CreatedDate > start)];
+        }
+
+        if(end.HasValue)
+        {
+            tickets = [.. tickets.Where(x => x.CreatedDate < end)];
+        }
+
+        return tickets;
+    }
 }

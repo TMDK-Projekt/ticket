@@ -66,6 +66,13 @@ public class TicketController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("getFilteredTickets")]
+    public async Task<IActionResult> GetFilteredTickets([FromBody] TicketFilterDto dto)
+    {
+        var tickets = await _ticketService.GetFilteredTickets(dto.Status, dto.StartTime, dto.EndTime);
+        return Ok(tickets);
+    }
+
     [HttpPost("deleteTicket")]
     public async Task<IActionResult> DeleteTicket([FromBody] TicketDto dto)
     {

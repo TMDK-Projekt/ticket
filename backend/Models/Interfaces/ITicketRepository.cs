@@ -12,4 +12,5 @@ public interface ITicketRepository
     Task<IEnumerable<Ticket>> GetAllAsync();
     Task<Ticket?> AssignAsync(Guid ticketId, Guid userId);
     Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketid, Guid customeriD);
+    Task<IEnumerable<Ticket>> GetFilteredTickets(Status? status, DateTime? start, DateTime? end);
 }
