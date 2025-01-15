@@ -29,7 +29,7 @@ public class TicketService
         await _ticketRepository.AddAsync(ticket);
     }
 
-    public async Task CreateAttachedTicketAsync(TicketDto dto )
+    public async Task CreateAttachedTicketAsync(TicketDto dto)
     {
         var ticket = new Ticket
         {
@@ -57,9 +57,9 @@ public class TicketService
         return await _ticketRepository.UpdateDescriptionAsync(dto.Id, dto.Description);
     }
 
-    public async Task<Ticket?> UpdateStatusAsync( TicketDto dto )
+    public async Task<Ticket?> UpdateStatusAsync(TicketDto dto)
     {
-        return await _ticketRepository.UpdateStatusAsync( dto.Id, dto.Status );
+        return await _ticketRepository.UpdateStatusAsync(dto.Id, dto.Status);
     }
 
     public async Task DeleteAsync(Guid id)
@@ -79,7 +79,7 @@ public class TicketService
 
     public async Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketId, Guid customerId)
     {
-        return await _ticketRepository.GetRelatedTicketTree(ticketId,customerId);
+        return await _ticketRepository.GetRelatedTicketTree(ticketId, customerId);
     }
     public async Task<Ticket?> AssignAsync(TicketDto dto)
     {

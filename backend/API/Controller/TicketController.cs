@@ -50,7 +50,7 @@ public class TicketController : ControllerBase
     {
         var ticket = await _ticketService.AssignAsync(dto);
         return Ok(ticket);
-    } 
+    }
 
     [HttpPost("createAttachedTicket")]
     public async Task<IActionResult> CreateAttachedTicket([FromBody] TicketDto dto)
@@ -80,15 +80,15 @@ public class TicketController : ControllerBase
         return Ok();
     }
 
-    [HttpPost( "updateDescription" )]
-    public async Task<IActionResult> updateDescription( [FromBody] TicketDto dto )
+    [HttpPost("updateDescription")]
+    public async Task<IActionResult> updateDescription([FromBody] TicketDto dto)
     {
         var ticket = await _ticketService.UpdateDescriptionAsync(dto);
         return Ok(ticket);
     }
 
-    [HttpPost( "updateStatus" )] //we need the Status as number
-    public async Task<IActionResult> updateStatus([FromBody] TicketDto dto )
+    [HttpPost("updateStatus")] //we need the Status as number
+    public async Task<IActionResult> updateStatus([FromBody] TicketDto dto)
     {
         var ticket = await _ticketService.UpdateStatusAsync(dto);
         return Ok(ticket);

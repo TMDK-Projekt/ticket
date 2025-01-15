@@ -94,17 +94,17 @@ public class TicketRepository : ITicketRepository
         return ticket;
     }
 
-    public async Task UpdateRelatedTicketIdAsync( Guid initialTicketId, Guid attachedTicketId )
+    public async Task UpdateRelatedTicketIdAsync(Guid initialTicketId, Guid attachedTicketId)
     {
         var initialTicket = await _context.Tickets.FirstOrDefaultAsync(x => x.Id == initialTicketId);
-        if (initialTicket is null )
+        if (initialTicket is null)
         {
-            _logger.LogInformation( $"Ticket with ID: {initialTicketId} could not be found" );
+            _logger.LogInformation($"Ticket with ID: {initialTicketId} could not be found");
             return;
         }
         initialTicket.RelatedTicketId = attachedTicketId;
         _context.SaveChanges();
-        _logger.LogInformation( $"Ticket with ID: {attachedTicketId} was referenced in ticket with ID: {initialTicketId}" );
+        _logger.LogInformation($"Ticket with ID: {attachedTicketId} was referenced in ticket with ID: {initialTicketId}");
         await Task.CompletedTask;
     }
 
@@ -157,20 +157,20 @@ public class TicketRepository : ITicketRepository
         _context.SaveChanges();
     }
 
-    public async Task<Ticket?> UpdateStatusAsync( Guid ticketId, Status newStatus )
+    public async Task<Ticket?> UpdateStatusAsync(Guid ticketId, Status newStatus)
     {
         var ticketToUpdate = await _context.Tickets
-           .FirstOrDefaultAsync( x => x.Id == ticketId );
+           .FirstOrDefaultAsync(x => x.Id == ticketId);
 
-        if ( ticketToUpdate is null )
+        if (ticketToUpdate is null)
         {
-            _logger.LogError( $"No Ticket with id: {ticketId} Found" );
+            _logger.LogError($"No Ticket with id: {ticketId} Found");
             return null;
         }
 
-        if ( !Enum.IsDefined( typeof( Status ), newStatus ) )
+        if (!Enum.IsDefined(typeof(Status), newStatus))
         {
-            _logger.LogError( $"Status: {newStatus} is invalid" );
+            _logger.LogError($"Status: {newStatus} is invalid");
             return null;
         }
 
@@ -179,19 +179,19 @@ public class TicketRepository : ITicketRepository
         return ticketToUpdate;
     }
 
-    public async Task<Ticket?> AssignAsync( Guid ticketId, Guid userId )
+    public async Task<Ticket?> AssignAsync(Guid ticketId, Guid userId)
     {
-        var ticket = await _context.Tickets.FirstOrDefaultAsync(x=> x.Id == ticketId); // the needed ticket
+        var ticket = await _context.Tickets.FirstOrDefaultAsync(x => x.Id == ticketId); // the needed ticket
 
         if (ticket is null)
         {
-            _logger.LogError( $"No Ticket with id: {ticketId} Found" );
+            _logger.LogError($"No Ticket with id: {ticketId} Found");
             return null;
         }
 
-        if ( _context.Users.First(x => x.Id == userId) is null)
+        if (_context.Users.First(x => x.Id == userId) is null)
         {
-            _logger.LogError( $"No User with id: {userId} Found" );
+            _logger.LogError($"No User with id: {userId} Found");
             return null;
         }
 
