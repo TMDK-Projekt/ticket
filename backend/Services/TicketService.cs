@@ -29,7 +29,7 @@ public class TicketService
         await _ticketRepository.AddAsync(ticket);
     }
 
-    public async Task CreateAttachedTicketAsync(TicketDto dto )
+    public async Task CreateAttachedTicketAsync(TicketDto dto)
     {
         var ticket = new Ticket
         {
@@ -61,14 +61,19 @@ public class TicketService
         return await _ticketRepository.UpdateDescriptionAsync(dto.Id, dto.Description);
     }
 
-    public async Task<Ticket?> UpdateStatusAsync( TicketDto dto )
+    public async Task<Ticket?> UpdateStatusAsync(TicketDto dto)
     {
-        return await _ticketRepository.UpdateStatusAsync( dto.Id, dto.Status );
+        return await _ticketRepository.UpdateStatusAsync(dto.Id, dto.Status);
     }
 
     public async Task DeleteAsync(Guid id)
     {
         await _ticketRepository.DeleteAsync(id);
+    }
+
+    public async Task RevokeTicket(Guid id)
+    {
+        await _ticketRepository.RevokeTicket(id);
     }
 
     public async Task<IEnumerable<Ticket>> GetAllAsync()
@@ -82,7 +87,7 @@ public class TicketService
 
     public async Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketId, Guid customerId)
     {
-        return await _ticketRepository.GetRelatedTicketTree(ticketId,customerId);
+        return await _ticketRepository.GetRelatedTicketTree(ticketId, customerId);
     }
     public async Task<Ticket?> AssignAsync(TicketDto dto)
     {
@@ -92,6 +97,11 @@ public class TicketService
     public async Task<string?> GenerateTicketResponse(string prompt)
     {
         return await _aIService.CallOpenAIAsync(prompt) ?? throw new Exception("API Response cant be null");
+    }
+
+    public async Task<IEnumerable<Ticket>> GetFilteredTickets(Status? status, DateTime? start, DateTime? end)
+    {
+        return await _ticketRepository.GetFilteredTickets(status, start, end);
     }
 }
 
