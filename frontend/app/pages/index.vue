@@ -3,9 +3,8 @@
 </script>
 
 <template>
-  Index
+  <div class="flex gap-2 w-full justify-end">
+
+    <TicketForm />
+  </div>
 </template>
-
-<style scoped>
-
-</style>

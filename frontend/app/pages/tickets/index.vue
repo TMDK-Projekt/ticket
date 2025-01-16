@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data: tickets } = await useFetch('http://localhost:5028/api/ticket/getAllTickets')
+const { data: tickets, refresh } = await useFetch('http://localhost:5028/api/ticket/getAllTickets')
 
 const user = useUser()
 
@@ -31,12 +31,14 @@ async function assignTicketToMe(v: { ticketId: string }) {
       id: v.ticketId,
     },
   })
+
+  await refresh()
 }
 </script>
 
 <template>
   <pre>
-    {{tickets}}
+    {{ tickets }}
   </pre>
   <div class="flex gap-2 flex-col">
     <div class="mt-5 flex grow justify-end gap-2">
@@ -90,8 +92,6 @@ async function assignTicketToMe(v: { ticketId: string }) {
             {{ timeAgo(new Date(ticket.createdDate)) }}
           </span>
           <div class="flex gap-2 justify-end w-full">
-
-
             <UiButton v-if="ticket.employeeId === user" as-child>
               <NuxtLink :to="`/tickets/${ticket.id}`">
                 Ticket Bearbeiten
@@ -102,7 +102,6 @@ async function assignTicketToMe(v: { ticketId: string }) {
               Mir Zuweisen
             </UiButton>
           </div>
-
         </UiCardFooter>
       </UiCard>
     </div>

@@ -35,7 +35,7 @@ const onSubmit = handleSubmit(async (value) => {
         </UiCardTitle>
         <UiCardDescription class="flex flex-col">
           <span>
-            User: {{ userName.firstName }} {{userName.lastName}}
+            User: {{ userName.firstName }} {{ userName.lastName }}
           </span>
           <span>
             Zugewiesener Mitarbeiter: {{ ticket.employeeId }}
@@ -68,7 +68,7 @@ const onSubmit = handleSubmit(async (value) => {
           </p>
         </UiCardContent>
         <UiCardFooter>
-          {{ timeAgo(new Date( ticket.createdAt)) }}
+          {{ timeAgo(new Date(ticket.createdAt)) }}
         </UiCardFooter>
       </UiCard>
 
