@@ -4,6 +4,8 @@ import { z } from 'zod'
 const route = useRoute()
 const { data: ticket, refresh } = await useFetch(`/api/tickets/${route.params.ticketId}`)
 
+const { data: userName } = await useFetch(`/api/user/${ticket.value.customerId}`)
+
 const user = useUser()
 
 const { handleSubmit, values } = useForm({
@@ -33,10 +35,10 @@ const onSubmit = handleSubmit(async (value) => {
         </UiCardTitle>
         <UiCardDescription class="flex flex-col">
           <span>
-            User: {{ ticket.customerId }}
+            User: {{ userName.firstName }} {{userName.lastName}}
           </span>
           <span>
-            Zugewiesener Mitarbeiter: {{ ticket.employeeId "Joa was machen wir?" }}
+            Zugewiesener Mitarbeiter: {{ ticket.employeeId }}
           </span>
         </UiCardDescription>
       </UiCardHeader>
