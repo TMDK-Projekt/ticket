@@ -50,7 +50,7 @@ public class TicketController : ControllerBase
     {
         var ticket = await _ticketService.AssignAsync(dto);
         return Ok(ticket);
-    } 
+    }
 
     [HttpPost("createAttachedTicket")]
     public async Task<IActionResult> CreateAttachedTicket([FromBody] TicketDto dto)
@@ -66,15 +66,36 @@ public class TicketController : ControllerBase
         return Ok();
     }
 
-    [HttpPost( "updateDescription" )]
-    public async Task<IActionResult> updateDescription( [FromBody] TicketDto dto )
+    [HttpPost("getFilteredTickets")]
+    public async Task<IActionResult> GetFilteredTickets([FromBody] TicketFilterDto dto)
+    {
+        var tickets = await _ticketService.GetFilteredTickets(dto.Status, dto.StartTime, dto.EndTime);
+        return Ok(tickets);
+    }
+
+    [HttpPost("deleteTicket")]
+    public async Task<IActionResult> DeleteTicket([FromBody] TicketDto dto)
+    {
+        await _ticketService.DeleteAsync(dto.Id);
+        return Ok();
+    }
+
+    [HttpGet("revokeTicket/{id}")]
+    public async Task<IActionResult> DeleteTicket(Guid id)
+    {
+        await _ticketService.RevokeTicket(id);
+        return Ok();
+    }
+
+    [HttpPost("updateDescription")]
+    public async Task<IActionResult> updateDescription([FromBody] TicketDto dto)
     {
         var ticket = await _ticketService.UpdateDescriptionAsync(dto);
         return Ok(ticket);
     }
 
-    [HttpPost( "updateStatus" )] //we need the Status as number
-    public async Task<IActionResult> updateStatus([FromBody] TicketDto dto )
+    [HttpPost("updateStatus")] //we need the Status as number
+    public async Task<IActionResult> updateStatus([FromBody] TicketDto dto)
     {
         var ticket = await _ticketService.UpdateStatusAsync(dto);
         return Ok(ticket);

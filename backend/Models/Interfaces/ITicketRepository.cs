@@ -6,11 +6,13 @@ public interface ITicketRepository
     Task AddAsync(Ticket ticket);
     Task UpdateRelatedTicketIdAsync(Guid initialTicketId, Guid attachedTicketId);
     Task<Ticket?> UpdateDescriptionAsync(Guid ticketId, string newDescription);
-    Task<Ticket?> UpdateStatusAsync( Guid ticketId, Status newStatus );
+    Task<Ticket?> UpdateStatusAsync(Guid ticketId, Status newStatus);
+    Task RevokeTicket(Guid id);
     Task DeleteAsync(Guid id);
     Task<IEnumerable<Ticket>> GetAllAsync();
     Task<IEnumerable<Ticket>> GetAllFilteredAsync(Status status);
     Task<Ticket?> SetTicketResponse(Guid id, string response);
     Task<Ticket?> AssignAsync( Guid ticketId, Guid userId );
     Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketid, Guid customeriD);
+    Task<IEnumerable<Ticket>> GetFilteredTickets(Status? status, DateTime? start, DateTime? end);
 }
