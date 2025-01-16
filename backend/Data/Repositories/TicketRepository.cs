@@ -263,6 +263,7 @@ public class TicketRepository : ITicketRepository
         }
 
         ticket.Response = response;
+        ticket.Status = Status.Closed;
         _context.SaveChanges();
         _logger.LogInformation( $"Ticket with ID: {ticketId} has answer: {response}" );
         return ticket;
