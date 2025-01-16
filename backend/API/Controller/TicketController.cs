@@ -31,6 +31,13 @@ public class TicketController : ControllerBase
         return Ok(tickets);
     }
 
+    [HttpGet( "getAllTicketsCustomer/{customerId}" )]
+    public async Task<IActionResult> GetAllMainTicketsCustomer(Guid customerId)
+    {
+        var tickets = await _ticketService.GetAllMainTicketsCustomer(customerId);
+        return Ok( tickets );
+    }
+
     [HttpPost("getAllRelatedTickets")]
     public async Task<IActionResult> GetRelatedTicketTree([FromBody] TicketDto dto)
     {
