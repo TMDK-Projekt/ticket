@@ -8,7 +8,7 @@ const { data: userName } = await useFetch(`/api/user/${ticket.value.customerId}`
 
 const user = useUser()
 
-const { handleSubmit, values } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
   validationSchema: toTypedSchema(z.object({
     response: z.string(),
   })),
@@ -24,6 +24,17 @@ const onSubmit = handleSubmit(async (value) => {
   })
   await refresh()
 })
+
+async function kiAwnser() {
+  const res = await $fetch<string>('/api/tickets/kireply', {
+    method: 'post',
+    body: {
+      prompt: ticket.value!.description,
+    },
+  })
+
+  setFieldValue('response', res)
+}
 </script>
 
 <template>
@@ -31,7 +42,7 @@ const onSubmit = handleSubmit(async (value) => {
     <UiCard>
       <UiCardHeader>
         <UiCardTitle class="text-xl">
-          Ticket
+          {{ ticket.reason }}
         </UiCardTitle>
         <UiCardDescription class="flex flex-col">
           <span>
@@ -55,27 +66,16 @@ const onSubmit = handleSubmit(async (value) => {
       </UiCardContent>
     </UiCard>
 
-    <div v-if="(ticket.employeeId === user.id) || ticket.response == ''">
-      <UiCard>
-        <UiCardHeader>
-          <UiCardTitle>
-            Antwort
-          </UiCardTitle>
-        </UiCardHeader>
-        <UiCardContent>
-          <p>
-            {{ ticket.response }}
-          </p>
-        </UiCardContent>
-        <UiCardFooter>
-          {{ timeAgo(new Date(ticket.createdAt)) }}
-        </UiCardFooter>
-      </UiCard>
-
-      <form novalidate class="flex gap-2 justify-end flex-col " @submit="onSubmit">
-        <ValidatedTextarea name="response" label="Antwort" />
-        <UiButton>Abschicken</UiButton>
-      </form>
+    <div v-if="ticket.response === ''">
+      <div class="flex gap-2 flex-col">
+        <form novalidate class="flex gap-2 justify-end flex-col " @submit.prevent="onSubmit">
+          <ValidatedTextarea name="response" label="Antwort" />
+          <UiButton>Abschicken</UiButton>
+        </form>
+        <UiButton @click="kiAwnser()">
+          Mit KI Vorschlag generieren
+        </UiButton>
+      </div>
     </div>
     <UiCard v-else>
       <UiCardHeader>

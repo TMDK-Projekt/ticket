@@ -13,7 +13,7 @@ async function logout() {
       <h2
         class="scroll-m-20 border-b justify-between flex pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
       >
-        Mitarbeiter Ansicht
+        User Ansicht
         <UiButton @click="logout()">
           Logout
         </UiButton>

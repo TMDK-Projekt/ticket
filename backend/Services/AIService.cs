@@ -42,7 +42,7 @@ public class AIService
                 new { role = "system", content = systemContent },
                 new { role = "user", content = prompt }
             },
-            max_tokens = 50,
+            max_tokens = 250,
             temperature = 0.7
         };
 

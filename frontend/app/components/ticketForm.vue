@@ -53,7 +53,7 @@ const onSubmit = handleSubmit(async (values) => {
       </UiButton>
     </UiDialogTrigger>
 
-    <UiDialogContent as="form" @submit="onSubmit()">
+    <UiDialogContent as="form" @submit.prevent="onSubmit()">
       <UiDialogHeader>
         <UiDialogTitle>Ticket erstellen</UiDialogTitle>
 
@@ -72,7 +72,7 @@ const onSubmit = handleSubmit(async (values) => {
           </UiSelectContent>
         </UiSelect>
 
-        <ValidatedTextarea name="description" label="Antwort" />
+        <ValidatedTextarea name="description" label="Description" />
       </UiDialogHeader>
 
       <UiDialogFooter>

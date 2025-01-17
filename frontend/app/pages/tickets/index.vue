@@ -4,16 +4,12 @@ const { data: tickets, refresh } = await useFetch('http://localhost:5028/api/tic
 const user = useUser()
 
 const filter = ref(null)
-const filtered = computed(() => {
-  return tickets.value
-    .sort((a, b) => {
-      if (a.status !== b.status) {
-        return a.status - b.status
-      }
-      return new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
-    })
-    .filter(t => !filter.value || t.status === filter.value)
-})
+const filtered = computed(() => tickets.value.filter((t) => {
+  console.log(t)
+  return !filter.value || t.status === Number(filter.value);
+
+    }),
+)
 
 const status = {
   0: 'Nicht Zugewiesen',
@@ -37,11 +33,9 @@ async function assignTicketToMe(v: { ticketId: string }) {
 </script>
 
 <template>
-  <pre>
-    {{ tickets }}
-  </pre>
   <div class="flex gap-2 flex-col">
     <div class="mt-5 flex grow justify-end gap-2">
+
       <UiSelect v-model="filter">
         <UiSelectTrigger>
           <UiSelectValue placeholder="Filter Status" />
@@ -50,7 +44,7 @@ async function assignTicketToMe(v: { ticketId: string }) {
           <UiSelectGroup>
             <UiSelectItem
               v-for="(stat, index) in status"
-              :key="useId()"
+              :key="stat"
               class="font-semibold"
               :value="Object.keys(status)[index]"
             >
