@@ -10,8 +10,7 @@ const { handleSubmit, values } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    console.log(values)
-    const user = await $fetch<string>('/api/signUp', {
+    await $fetch<string>('/api/signUp', {
       method: 'POST',
       body: { firstName: values.firstName, lastName: values.lastName, email: values.email, password: values.password },
     })
@@ -30,7 +29,6 @@ const onSubmit = handleSubmit(async (values) => {
         <UiCardTitle>Registrieren</UiCardTitle>
       </UiCardHeader>
       <UiCardContent class="flex flex-col gap-2">
-        {{ values }}
         <ValidatedInput name="firstName" label="Vorname" />
         <ValidatedInput name="lastName" label="Nachname" />
         <ValidatedInput name="email" label="Email" type="email" />

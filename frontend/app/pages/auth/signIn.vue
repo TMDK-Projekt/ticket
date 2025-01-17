@@ -12,7 +12,6 @@ const userCookie = useUser()
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    console.log(values)
     const user = await $fetch<string>('/api/signIn', {
       method: 'POST',
       body: { email: values.email, password: values.password },
@@ -39,7 +38,6 @@ const onSubmit = handleSubmit(async (values) => {
       </UiCardHeader>
 
       <UiCardContent class="gap-2 flex flex-col">
-        {{ values }}
         <ValidatedInput name="email" label="Email" type="email" />
         <ValidatedInput name="password" label="Passwort" type="password" />
       </UiCardContent>
