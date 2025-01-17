@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Models;
 using Models.Interfaces;
-using Services.Dto;
 using Services.Shared;
-using System;
+using System.Collections.Immutable;
+using System.Security;
 
 namespace Data.Repositories;
 
@@ -78,6 +78,34 @@ public class TicketRepository : ITicketRepository
             .Where(x => x.RelatedTicketId == Guid.Empty)
             .OrderByDescending(ticket => ticket.CreatedDate)
             .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Ticket>> GetAllFilteredAsync(Status status)
+    {
+        return await _context.Tickets
+            .Where( x => x.RelatedTicketId == Guid.Empty && x.Status == status)
+            .OrderByDescending( ticket => ticket.CreatedDate )
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Ticket>> GetAllMainTicketsCustomer(Guid customerId)
+    {
+        var allTickets = await _context.Tickets
+            .Where( x => x.CustomerId == customerId)
+            .OrderByDescending( ticket => ticket.CreatedDate )
+            .ToListAsync();
+
+        var allRelatedTickets = await _context.Tickets.Where( x => x.RelatedTicketId != Guid.Empty ).ToListAsync();
+
+        foreach (var ticket in allTickets.ToList() )
+        {
+            if( allRelatedTickets.Any(x => x.RelatedTicketId == ticket.Id) )
+            {
+                allTickets.Remove(ticket);
+            }
+        }
+
+        return allTickets;
     }
 
     public async Task<Ticket?> GetByIdAsync(Guid id)
@@ -222,5 +250,21 @@ public class TicketRepository : ITicketRepository
         }
 
         return tickets;
+    }
+
+    public async Task<Ticket?> SetTicketResponse( Guid ticketId, string response )
+    {
+        var ticket = await _context.Tickets.FirstOrDefaultAsync( x => x.Id == ticketId ); // the needed ticket
+
+        if ( ticket is null )
+        {
+            _logger.LogError( $"No Ticket with id: {ticketId} Found" );
+            return null;
+        }
+
+        ticket.Response = response;
+        _context.SaveChanges();
+        _logger.LogInformation( $"Ticket with ID: {ticketId} has answer: {response}" );
+        return ticket;
     }
 }

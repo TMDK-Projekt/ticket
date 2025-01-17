@@ -35,7 +35,7 @@ public class UserRepository : IUserRepository
             _logger.LogError($"No user with email: {email} and password {password} found");
             return null;
         }
-
+        user.Password = "";
         return user;
     }
 

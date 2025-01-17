@@ -49,8 +49,8 @@ public class UserController : ControllerBase
     [HttpGet("getUser/{id}")]
     public async Task<IActionResult> GetUser(Guid id)
     {
-        await _userService.GetUserById(id);
-        return Ok();
+        var user = await _userService.GetUserById(id);
+        return Ok(user);
     }
 
     [HttpGet("getUserName/{id}")]

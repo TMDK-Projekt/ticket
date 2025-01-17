@@ -1,40 +1,15 @@
 <script setup lang="ts">
-const { data: tickets } = await useFetch('http://localhost:5028/api/ticket/getAllTickets')
+const { data: tickets, refresh } = await useFetch('http://localhost:5028/api/ticket/getAllTickets')
 
-const reasons = ref([
-  {
-    value: 'fehlercode',
-    description: 'Fehlercode',
-  },
-  {
-    value: 'hardwareproblem',
-    description: 'Hardwareproblem',
-  },
-  {
-    value: 'support',
-    description: 'Support',
-  },
-  {
-    value: 'softwareUpdates',
-    description: 'Software-Updates',
-  },
-  {
-    value: 'sonstiges',
-    description: 'Sonstiges',
-  },
-])
+const user = useUser()
 
 const filter = ref(null)
-const filtered = computed(() => {
-  return tickets.value
-    .sort((a, b) => {
-      if (a.status !== b.status) {
-        return a.status - b.status
-      }
-      return new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
-    })
-    .filter(t => !filter.value || t.status === filter.value)
-})
+const filtered = computed(() => tickets.value.filter((t) => {
+  console.log(t)
+  return !filter.value || t.status === Number(filter.value);
+
+    }),
+)
 
 const status = {
   0: 'Nicht Zugewiesen',
@@ -43,11 +18,24 @@ const status = {
   3: 'Geschlossen',
   9999: 'Alle',
 }
+
+async function assignTicketToMe(v: { ticketId: string }) {
+  await $fetch('/api/tickets/assign', {
+    method: 'POST',
+    body: {
+      employeeId: user.value,
+      id: v.ticketId,
+    },
+  })
+
+  await refresh()
+}
 </script>
 
 <template>
   <div class="flex gap-2 flex-col">
     <div class="mt-5 flex grow justify-end gap-2">
+
       <UiSelect v-model="filter">
         <UiSelectTrigger>
           <UiSelectValue placeholder="Filter Status" />
@@ -56,7 +44,7 @@ const status = {
           <UiSelectGroup>
             <UiSelectItem
               v-for="(stat, index) in status"
-              :key="useId()"
+              :key="stat"
               class="font-semibold"
               :value="Object.keys(status)[index]"
             >
@@ -78,14 +66,11 @@ const status = {
       <UiCard v-for="ticket in filtered" :key="ticket.id" class="relative">
         <UiCardHeader class="flex flex-row justify-between">
           <UiCardTitle class="text-lg">
-            {{ ticket.reason }}
+            {{ (ticket.reason === '') ? 'Kein Grund angegeben' : ticket.reason }}
           </UiCardTitle>
-          <div class="absolute top-4 right-4 font-semibold  flex flex-col">
+          <div class="absolute top-6 right-6 font-semibold  flex flex-col">
             <span>
-              Status: {{ ticket.status }}
-            </span>
-            <span>
-              Assigneed: {{ ticket.employeeId !== "00000000-0000-0000-0000-000000000000" && ticket.employeeId }}
+              Status: {{ status[ticket.status] }}
             </span>
           </div>
         </UiCardHeader>
@@ -100,12 +85,17 @@ const status = {
           <span class="text-sm font-semibold text-muted-foreground">
             {{ timeAgo(new Date(ticket.createdDate)) }}
           </span>
+          <div class="flex gap-2 justify-end w-full">
+            <UiButton v-if="ticket.employeeId === user" as-child>
+              <NuxtLink :to="`/tickets/${ticket.id}`">
+                Ticket Bearbeiten
+              </NuxtLink>
+            </UiButton>
 
-          <UiButton as-child>
-            <NuxtLink :to="`/tickets/${ticket.id}`">
-              Ticket Bearbeiten
-            </NuxtLink>
-          </UiButton>
+            <UiButton v-else @click="assignTicketToMe({ ticketId: ticket.id })">
+              Mir Zuweisen
+            </UiButton>
+          </div>
         </UiCardFooter>
       </UiCard>
     </div>

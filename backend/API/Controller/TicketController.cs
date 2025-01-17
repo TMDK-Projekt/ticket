@@ -31,6 +31,13 @@ public class TicketController : ControllerBase
         return Ok(tickets);
     }
 
+    [HttpGet( "getAllTicketsCustomer/{customerId}" )]
+    public async Task<IActionResult> GetAllMainTicketsCustomer(Guid customerId)
+    {
+        var tickets = await _ticketService.GetAllMainTicketsCustomer(customerId);
+        return Ok( tickets );
+    }
+
     [HttpPost("getAllRelatedTickets")]
     public async Task<IActionResult> GetRelatedTicketTree([FromBody] TicketDto dto)
     {
@@ -99,5 +106,19 @@ public class TicketController : ControllerBase
     {
         var ticket = await _ticketService.UpdateStatusAsync(dto);
         return Ok(ticket);
+    }
+
+    [HttpGet( "filterTickets/{status}" )] //we need the Status as number
+    public async Task<IActionResult> getFilteredTickets( Status status )
+    {
+        var ticket = await _ticketService.GetAllFilteredAsync( status );
+        return Ok( ticket );
+    }
+
+    [HttpPost( "reply" )] //we need the Status as number
+    public async Task<IActionResult> setTicketResponse( [FromBody] TicketDto dto )
+    {
+        var ticket = await _ticketService.SetTicketResponse( dto );
+        return Ok( ticket );
     }
 }

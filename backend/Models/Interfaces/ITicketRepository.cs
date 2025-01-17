@@ -10,7 +10,10 @@ public interface ITicketRepository
     Task RevokeTicket(Guid id);
     Task DeleteAsync(Guid id);
     Task<IEnumerable<Ticket>> GetAllAsync();
-    Task<Ticket?> AssignAsync(Guid ticketId, Guid userId);
+    Task<IEnumerable<Ticket>> GetAllFilteredAsync(Status status);
+    Task<IEnumerable<Ticket>> GetAllMainTicketsCustomer( Guid customerId );
+    Task<Ticket?> SetTicketResponse(Guid id, string response);
+    Task<Ticket?> AssignAsync( Guid ticketId, Guid userId );
     Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketid, Guid customeriD);
     Task<IEnumerable<Ticket>> GetFilteredTickets(Status? status, DateTime? start, DateTime? end);
 }

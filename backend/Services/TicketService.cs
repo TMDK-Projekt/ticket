@@ -51,6 +51,10 @@ public class TicketService
     {
         return await _ticketRepository.GetByIdAsync(id);
     }
+    public async Task<Ticket?> SetTicketResponse( TicketDto dto )
+    {
+        return await _ticketRepository.SetTicketResponse( dto.Id, dto.Response );
+    }
 
     public async Task<Ticket?> UpdateDescriptionAsync(TicketDto dto)
     {
@@ -75,6 +79,15 @@ public class TicketService
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
         return await _ticketRepository.GetAllAsync();
+    }
+    public async Task<IEnumerable<Ticket>> GetAllFilteredAsync(Status status)
+    {
+        return await _ticketRepository.GetAllFilteredAsync(status);
+    }
+
+    public async Task<IEnumerable<Ticket>> GetAllMainTicketsCustomer( Guid customerId )
+    {
+        return await _ticketRepository.GetAllMainTicketsCustomer( customerId );
     }
 
     public async Task<IEnumerable<Ticket>> GetRelatedTicketTree(Guid ticketId, Guid customerId)
