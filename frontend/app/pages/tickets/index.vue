@@ -1,14 +1,12 @@
 <script setup lang="ts">
-const { data: tickets, refresh } = await useFetch('http://localhost:5028/api/ticket/getAllTickets')
+const { data: tickets, refresh } = await useFetch('/api/tickets/all')
 
 const user = useUser()
 
 const filter = ref(null)
 const filtered = computed(() => tickets.value.filter((t) => {
-  console.log(t)
-  return !filter.value || t.status === Number(filter.value);
-
-    }),
+  return !filter.value || t.status === Number(filter.value)
+}),
 )
 
 const status = {
@@ -35,7 +33,6 @@ async function assignTicketToMe(v: { ticketId: string }) {
 <template>
   <div class="flex gap-2 flex-col">
     <div class="mt-5 flex grow justify-end gap-2">
-
       <UiSelect v-model="filter">
         <UiSelectTrigger>
           <UiSelectValue placeholder="Filter Status" />
@@ -53,6 +50,9 @@ async function assignTicketToMe(v: { ticketId: string }) {
           </UiSelectGroup>
         </UiSelectContent>
       </UiSelect>
+      <UiButton @click="refresh">
+        Refresh
+      </UiButton>
     </div>
     <div class="flex justify-end">
       <span class="font-semibold text-sm">

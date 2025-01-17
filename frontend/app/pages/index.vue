@@ -5,13 +5,18 @@ definePageMeta({
   layout: 'mitarbeiter',
 })
 
-const { data: tickets } = await useFetch(`/api/tickets/${user.value ?? ''}/tickets`)
+const { data: tickets, refresh } = await useFetch(`/api/tickets/${user.value ?? ''}/tickets`)
 </script>
 
 <template>
   <div>
+    {{ user }}
     <div class="flex gap-2 w-full justify-end py-4">
       <TicketForm />
+
+      <UiButton @click="refresh">
+        Refresh
+      </UiButton>
     </div>
     <div class="flex flex-col gap-2">
       <UiCard v-for="ticket in tickets" :key="ticket.id" class="relative ">

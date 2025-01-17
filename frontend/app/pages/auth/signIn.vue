@@ -12,15 +12,25 @@ const userCookie = useUser()
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    const user = await $fetch<string>('/api/signIn', {
+    const userId = await $fetch<string>('/api/signIn', {
       method: 'POST',
       body: { email: values.email, password: values.password },
     })
-    if (user === '00000000-0000-0000-0000-000000000000') {
+    if (userId === '00000000-0000-0000-0000-000000000000') {
       userCookie.value = null
       return
     }
-    userCookie.value = user
+    userCookie.value = userId
+
+    console.log(userCookie)
+
+    const isEmployee = (await $fetch(`/api/me/${userCookie.value}`)).isEmployee
+
+    if (isEmployee) {
+      await navigateTo('/tickets')
+      return
+    }
+
     await navigateTo('/')
   }
   catch {

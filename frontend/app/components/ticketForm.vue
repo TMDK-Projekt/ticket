@@ -53,7 +53,7 @@ const onSubmit = handleSubmit(async (values) => {
       </UiButton>
     </UiDialogTrigger>
 
-    <UiDialogContent as="form" @submit.prevent="onSubmit()">
+    <UiDialogContent as="form" @submit.prevent="onSubmit">
       <UiDialogHeader>
         <UiDialogTitle>Ticket erstellen</UiDialogTitle>
 
